@@ -12,8 +12,13 @@
         .stat { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 1px dashed #334155; padding-bottom: 5px;}
         .val { font-weight: bold; color: #fbbf24; }
         #map { height: 250px; width: 100%; margin-top: 20px; border-radius: 8px; opacity: 0.9; border: 1px solid #475569; }
+        
         button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; font-family: monospace; font-weight: bold; font-size: 1rem; transition: all 0.2s;}
         button:hover { background: #1d4ed8; transform: translateY(-1px); }
+        
+        /* Privacy Note Styling */
+        .privacy-note { font-size: 0.7rem; color: #94a3b8; text-align: center; margin-top: 12px; font-style: italic; border-top: 1px solid #334155; padding-top: 10px; line-height: 1.4; }
+        
         .badge { font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
         .gps-badge { background: #059669; color: white; }
         .isp-badge { background: #ca8a04; color: black; }
@@ -31,14 +36,19 @@
     <div class="stat" style="border:none"><span>YOUR CURRENT LOCATION:</span> <span id="loc" class="val">---</span></div>
 
     <div id="map"></div>
+    
     <button onclick="scanNetwork()">START DIAGNOSTICS</button>
+    
+    <div class="privacy-note">
+        🔒 <b>Privacy Tip:</b> Precise GPS is optional. If denied/blocked, the system automatically falls back to the approximate ISP node location.
+    </div>
 </div>
 
 <script>
-    
+    // AWS API Gateway Endpoint
     const API_URL = "https://mb05ts26n2.execute-api.ap-southeast-1.amazonaws.com/net-info"; 
 
-    // Initialize Map - Default view: Vietnam
+    // Initialize Leaflet Map (Default View: Vietnam)
     let map = L.map('map').setView([10.8231, 106.6297], 5); 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
     let marker;
@@ -51,25 +61,25 @@
         const start = Date.now();
         
         try {
-            // 1. Fetch IP & Latency from AWS Backend
+            // 1. Fetch Network Data from AWS Lambda
             const res = await fetch(API_URL);
             const data = await res.json();
             const latency = Date.now() - start;
 
-            // Update basic stats
+            // Update UI Metrics
             document.getElementById('ip').innerText = data.ip;
             document.getElementById('isp').innerText = data.isp;
             
-            // Latency color coding (Green < 100ms, Yellow < 250ms, Red > 250ms)
+            // Latency Thresholds: Green < 100ms, Yellow < 250ms, Red > 250ms
             const color = latency < 100 ? '#4ade80' : (latency < 250 ? '#facc15' : '#f87171');
             document.getElementById('ping').innerHTML = `<span style="color:${color}">${latency}ms</span>`;
 
-            // 2. Handle Geolocation (Priority: GPS > IP-based)
+            // 2. Handle Geolocation (Priority: GPS > ISP Fallback)
             if (navigator.geolocation) {
                 document.getElementById('source').innerText = "Requesting GPS Access...";
                 
                 navigator.geolocation.getCurrentPosition(
-                    // Case A: Permission granted -> Use precise GPS coordinates
+                    // Case A: Access Granted -> Use High Accuracy GPS
                     (position) => {
                         const lat = position.coords.latitude;
                         const lon = position.coords.longitude;
@@ -79,7 +89,7 @@
                         document.getElementById('loc').innerText = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
                         finish();
                     },
-                    // Case B: Permission denied/Error -> Fallback to AWS IP-based location
+                    // Case B: Access Denied -> Fallback to AWS IP-based Location
                     () => {
                         fallbackToISP(data);
                     }
@@ -89,12 +99,13 @@
             }
 
         } catch (e) {
-            alert("Connection Error! Please check Console or API URL.");
-            console.error(e);
+            alert("Connection Error! Check Console for details.");
+            console.error("Network Diagnostics Failed:", e);
             finish();
         }
     }
 
+    // Fallback handler: uses approximate location from IP-API
     function fallbackToISP(data) {
         if(data.lat) {
             updateMap(data.lat, data.lon, `${data.city} (ISP Node)`, false);
@@ -104,14 +115,16 @@
         finish();
     }
 
+    // Update Map Marker & Zoom Level
     function updateMap(lat, lon, msg, isGPS) {
-        const zoom = isGPS ? 15 : 10; // Zoom closer for GPS, wider for ISP
+        const zoom = isGPS ? 15 : 10; 
         map.setView([lat, lon], zoom);
         if (marker) map.removeLayer(marker);
         marker = L.marker([lat, lon]).addTo(map)
             .bindPopup(`<b>${msg}</b>`).openPopup();
     }
 
+    // Reset Button State
     function finish() {
         const btn = document.querySelector('button');
         btn.innerText = "RE-SCAN NETWORK";
