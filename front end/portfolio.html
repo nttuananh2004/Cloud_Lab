@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudLab - NetProbe System</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        body { background: #0f172a; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; width: 450px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+        h2 { color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 15px; letter-spacing: 1px;}
+        .stat { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 1px dashed #334155; padding-bottom: 5px;}
+        .val { font-weight: bold; color: #fbbf24; }
+        #map { height: 250px; width: 100%; margin-top: 20px; border-radius: 8px; opacity: 0.9; border: 1px solid #475569; }
+        button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; font-family: monospace; font-weight: bold; font-size: 1rem; transition: all 0.2s;}
+        button:hover { background: #1d4ed8; transform: translateY(-1px); }
+        .badge { font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+        .gps-badge { background: #059669; color: white; }
+        .isp-badge { background: #ca8a04; color: black; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>📡 MODULE 1: NET_PROBE</h2>
+    
+    <div class="stat"><span>YOUR IP:</span> <span id="ip" class="val">---</span></div>
+    <div class="stat"><span>ISP PROVIDER:</span> <span id="isp" class="val">---</span></div>
+    <div class="stat"><span>LATENCY (AWS SINGAPORE):</span> <span id="ping" class="val">---</span></div>
+    <div class="stat"><span>LOCATION SOURCE:</span> <span id="source" class="val">---</span></div>
+    <div class="stat" style="border:none"><span>YOUR CURRENT LOCATION:</span> <span id="loc" class="val">---</span></div>
+
+    <div id="map"></div>
+    <button onclick="scanNetwork()">START DIAGNOSTICS</button>
+</div>
+
+<script>
+    
+    const API_URL = "https://YOUR-API-ID.execute-api.ap-southeast-1.amazonaws.com/net-info"; 
+
+    // Initialize Map - Default view: Vietnam
+    let map = L.map('map').setView([10.8231, 106.6297], 5); 
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    let marker;
+
+    async function scanNetwork() {
+        const btn = document.querySelector('button');
+        btn.innerText = "SCANNING...";
+        btn.disabled = true;
+
+        const start = Date.now();
+        
+        try {
+            // 1. Fetch IP & Latency from AWS Backend
+            const res = await fetch(API_URL);
+            const data = await res.json();
+            const latency = Date.now() - start;
+
+            // Update basic stats
+            document.getElementById('ip').innerText = data.ip;
+            document.getElementById('isp').innerText = data.isp;
+            
+            // Latency color coding (Green < 100ms, Yellow < 250ms, Red > 250ms)
+            const color = latency < 100 ? '#4ade80' : (latency < 250 ? '#facc15' : '#f87171');
+            document.getElementById('ping').innerHTML = `<span style="color:${color}">${latency}ms</span>`;
+
+            // 2. Handle Geolocation (Priority: GPS > IP-based)
+            if (navigator.geolocation) {
+                document.getElementById('source').innerText = "Requesting GPS Access...";
+                
+                navigator.geolocation.getCurrentPosition(
+                    // Case A: Permission granted -> Use precise GPS coordinates
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        updateMap(lat, lon, "User Device (GPS)", true);
+                        document.getElementById('source').innerHTML = "SATELLITE GPS <span class='badge gps-badge'>PRECISE</span>";
+                        document.getElementById('loc').innerText = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+                        finish();
+                    },
+                    // Case B: Permission denied/Error -> Fallback to AWS IP-based location
+                    () => {
+                        fallbackToISP(data);
+                    }
+                );
+            } else {
+                fallbackToISP(data);
+            }
+
+        } catch (e) {
+            alert("Connection Error! Please check Console or API URL.");
+            console.error(e);
+            finish();
+        }
+    }
+
+    function fallbackToISP(data) {
+        if(data.lat) {
+            updateMap(data.lat, data.lon, `${data.city} (ISP Node)`, false);
+            document.getElementById('source').innerHTML = "ISP GATEWAY <span class='badge isp-badge'>ESTIMATED</span>";
+            document.getElementById('loc').innerText = `${data.city}, ${data.country}`;
+        }
+        finish();
+    }
+
+    function updateMap(lat, lon, msg, isGPS) {
+        const zoom = isGPS ? 15 : 10; // Zoom closer for GPS, wider for ISP
+        map.setView([lat, lon], zoom);
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lon]).addTo(map)
+            .bindPopup(`<b>${msg}</b>`).openPopup();
+    }
+
+    function finish() {
+        const btn = document.querySelector('button');
+        btn.innerText = "RE-SCAN NETWORK";
+        btn.disabled = false;
+    }
+</script>
+
+</body>
+</html>
