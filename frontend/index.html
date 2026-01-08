@@ -2,135 +2,88 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CloudLab - NetProbe System</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudLab | Serverless Portfolio</title>
     <style>
-        body { background: #0f172a; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; width: 450px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
-        h2 { color: #38bdf8; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 15px; letter-spacing: 1px;}
-        .stat { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 1px dashed #334155; padding-bottom: 5px;}
-        .val { font-weight: bold; color: #fbbf24; }
-        #map { height: 250px; width: 100%; margin-top: 20px; border-radius: 8px; opacity: 0.9; border: 1px solid #475569; }
+        /* GLOBAL STYLES */
+        body { background: #0b1120; color: #e2e8f0; font-family: 'Courier New', monospace; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
         
-        button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; font-family: monospace; font-weight: bold; font-size: 1rem; transition: all 0.2s;}
-        button:hover { background: #1d4ed8; transform: translateY(-1px); }
+        /* HEADER & PROFILE */
+        header { text-align: center; margin-top: 40px; margin-bottom: 30px; }
+        h1 { font-size: 2.5rem; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); margin: 0; letter-spacing: 2px; }
+        .subtitle { color: #94a3b8; font-size: 0.9rem; margin-top: 5px; }
+
+        .profile-card { background: #1e293b; width: 90%; max-width: 1000px; border: 1px solid #334155; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: flex; gap: 30px; align-items: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .profile-left { flex: 1; text-align: center; border-right: 1px dashed #334155; padding-right: 20px; }
+        .profile-right { flex: 2; }
         
-        /* Privacy Note Styling */
-        .privacy-note { font-size: 0.7rem; color: #94a3b8; text-align: center; margin-top: 12px; font-style: italic; border-top: 1px solid #334155; padding-top: 10px; line-height: 1.4; }
+        /* GRID MENU */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 90%; max-width: 1000px; }
+        .card-menu { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; transition: all 0.2s; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .card-menu:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2); }
+        .card-menu h3 { color: #fbbf24; margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
         
-        .badge { font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
-        .gps-badge { background: #059669; color: white; }
-        .isp-badge { background: #ca8a04; color: black; }
+        /* BUTTONS & TAGS */
+        .btn { text-decoration: none; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; text-align: center; display: inline-block; }
+        .btn:hover { background: #3b82f6; }
+        .btn-disabled { background: #475569; cursor: not-allowed; pointer-events: none; }
+        
+        .tech-tag { background: #334155; color: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px; display: inline-block; margin-top: 5px; }
+        .badge { font-size: 0.7rem; padding: 2px 5px; border-radius: 4px; }
+        .bg-live { background: #059669; color: white; }
+        .bg-beta { background: #ca8a04; color: black; }
+
+        @media (max-width: 768px) { .profile-card { flex-direction: column; text-align: center; } .profile-left { border-right: none; border-bottom: 1px dashed #334155; padding-bottom: 20px; padding-right: 0; } }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>📡 MODULE 1: NET_PROBE</h2>
-    
-    <div class="stat"><span>YOUR IP:</span> <span id="ip" class="val">---</span></div>
-    <div class="stat"><span>ISP PROVIDER:</span> <span id="isp" class="val">---</span></div>
-    <div class="stat"><span>LATENCY (AWS SINGAPORE):</span> <span id="ping" class="val">---</span></div>
-    <div class="stat"><span>LOCATION SOURCE:</span> <span id="source" class="val">---</span></div>
-    <div class="stat" style="border:none"><span>YOUR CURRENT LOCATION:</span> <span id="loc" class="val">---</span></div>
+    <header>
+        <h1>CLOUD_LAB v1.0</h1>
+        <div class="subtitle">AWS ARCHITECTURE PORTFOLIO</div>
+    </header>
 
-    <div id="map"></div>
-    
-    <button onclick="scanNetwork()">START DIAGNOSTICS</button>
-    
-    <div class="privacy-note">
-        🔒 <b>Privacy Tip:</b> Precise GPS is optional. If denied/blocked, the system automatically falls back to the approximate ISP node location.
+    <div class="profile-card">
+        <div class="profile-left">
+            <div style="font-size: 4rem; margin-bottom: 10px;">👨‍💻</div>
+            <h2 style="color: #e2e8f0; margin: 0;">[YOUR NAME]</h2>
+            <div style="color: #38bdf8; font-weight: bold; margin-top: 5px;">CLOUD SOLUTIONS ARCHITECT</div>
+            <div style="margin-top: 15px;">
+                <a href="https://github.com/nttuananh2004" target="_blank" class="btn" style="background: #334155; font-size: 0.8rem; padding: 5px 15px;">GITHUB</a>
+            </div>
+        </div>
+        <div class="profile-right">
+            <h3 style="color: #fbbf24; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 10px;">SYSTEM SPECIFICATIONS</h3>
+            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">
+                Specialized in building scalable <b>Serverless Architectures</b> on AWS. Focus on high-availability systems and cost optimization. Currently preparing for <span style="color:#38bdf8">AWS Solutions Architect Associate (SAA-C03)</span>.
+            </p>
+            <div>
+                <span class="tech-tag">AWS Lambda</span><span class="tech-tag">API Gateway</span><span class="tech-tag">DynamoDB</span><span class="tech-tag">Python</span>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    // AWS API Gateway Endpoint
-    const API_URL = "https://mb05ts26n2.execute-api.ap-southeast-1.amazonaws.com/net-info"; 
+    <div class="grid-container">
+        <div class="card-menu">
+            <div>
+                <h3>📡 NET_PROBE <span class="badge bg-live">LIVE</span></h3>
+                <p style="color:#cbd5e1; font-size:0.9rem;">Real-time diagnostics & Geo-tracking using Lambda, API Gateway & DynamoDB.</p>
+            </div>
+            <a href="netprobe.html" class="btn">LAUNCH MODULE</a>
+        </div>
 
-    // Initialize Leaflet Map (Default View: Vietnam)
-    let map = L.map('map').setView([10.8231, 106.6297], 5); 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
-    let marker;
-
-    async function scanNetwork() {
-        const btn = document.querySelector('button');
-        btn.innerText = "SCANNING...";
-        btn.disabled = true;
-
-        const start = Date.now();
-        
-        try {
-            // 1. Fetch Network Data from AWS Lambda
-            const res = await fetch(API_URL);
-            const data = await res.json();
-            const latency = Date.now() - start;
-
-            // Update UI Metrics
-            document.getElementById('ip').innerText = data.ip;
-            document.getElementById('isp').innerText = data.isp;
-            
-            // Latency Thresholds: Green < 100ms, Yellow < 250ms, Red > 250ms
-            const color = latency < 100 ? '#4ade80' : (latency < 250 ? '#facc15' : '#f87171');
-            document.getElementById('ping').innerHTML = `<span style="color:${color}">${latency}ms</span>`;
-
-            // 2. Handle Geolocation (Priority: GPS > ISP Fallback)
-            if (navigator.geolocation) {
-                document.getElementById('source').innerText = "Requesting GPS Access...";
-                
-                navigator.geolocation.getCurrentPosition(
-                    // Case A: Access Granted -> Use High Accuracy GPS
-                    (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        
-                        updateMap(lat, lon, "User Device (GPS)", true);
-                        document.getElementById('source').innerHTML = "SATELLITE GPS <span class='badge gps-badge'>PRECISE</span>";
-                        document.getElementById('loc').innerText = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-                        finish();
-                    },
-                    // Case B: Access Denied -> Fallback to AWS IP-based Location
-                    () => {
-                        fallbackToISP(data);
-                    }
-                );
-            } else {
-                fallbackToISP(data);
-            }
-
-        } catch (e) {
-            alert("Connection Error! Check Console for details.");
-            console.error("Network Diagnostics Failed:", e);
-            finish();
-        }
-    }
-
-    // Fallback handler: uses approximate location from IP-API
-    function fallbackToISP(data) {
-        if(data.lat) {
-            updateMap(data.lat, data.lon, `${data.city} (ISP Node)`, false);
-            document.getElementById('source').innerHTML = "ISP GATEWAY <span class='badge isp-badge'>ESTIMATED</span>";
-            document.getElementById('loc').innerText = `${data.city}, ${data.country}`;
-        }
-        finish();
-    }
-
-    // Update Map Marker & Zoom Level
-    function updateMap(lat, lon, msg, isGPS) {
-        const zoom = isGPS ? 15 : 10; 
-        map.setView([lat, lon], zoom);
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lon]).addTo(map)
-            .bindPopup(`<b>${msg}</b>`).openPopup();
-    }
-
-    // Reset Button State
-    function finish() {
-        const btn = document.querySelector('button');
-        btn.innerText = "RE-SCAN NETWORK";
-        btn.disabled = false;
-    }
-</script>
+        <div class="card-menu" style="opacity: 0.6; border-style: dashed;">
+            <div>
+                <h3>👤 FACE_GUARD <span class="badge bg-beta">SOON</span></h3>
+                <p style="color:#cbd5e1; font-size:0.9rem;">Identity verification (E-KYC) using AWS Rekognition & S3.</p>
+            </div>
+            <a href="#" class="btn btn-disabled">LOCKED 🔒</a>
+        </div>
+    </div>
+    
+    <div style="margin-top: 50px; color: #475569; font-size: 0.8rem;">
+        SYSTEM STATUS: ONLINE | REGION: AP-SOUTHEAST-1
+    </div>
 
 </body>
 </html>
