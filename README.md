@@ -39,7 +39,23 @@ An experimental biometric verification system integrating **Computer Vision** an
 * **Entry Point:** **AWS API Gateway** ingests base64-encoded image payloads directly to the processing layer.
 * **Orchestration:** **AWS Lambda** performs runtime format normalization and coordinates concurrent calls to downstream AI services.
 * **Computer Vision:** **Amazon Rekognition** executes facial vector extraction and similarity matching.
-* **Intelligence Layer:** **Amazon Bedrock (Claude 3 Flash)** synthesizes raw biometric metadata into human-readable security reports.
+* **Intelligence Layer:** **Amazon Bedrock (Claude 3 Haiku)** synthesizes raw biometric metadata into human-readable security reports.
+
+---
+
+## MODULE 3: SOS_BEACON
+### Tactical Emergency Uplink & Geo-Spatial Messaging System
+
+A critical response mechanism designed to leverage client-side telemetry for immediate extraction protocols. It bridges the gap between physical location data and cloud-native notification pipelines.
+
+### Architecture Diagram
+![SOS_BEACON Architecture](assets/sos.png)
+
+### Architecture Highlights
+* **Telemetry Acquisition:** Leverages **HTML5 Geolocation API** for high-precision coordinate capture (Latitude/Longitude) directly from the client browser.
+* **Event Ingestion:** **AWS API Gateway** provides a secure, low-latency webhook for distress signal transmission.
+* **Logic & Formatting:** **AWS Lambda** processes the payload, validates coordinates, and generates tactical map visualizations (Google Maps deep-linking).
+* **Broadcast Layer:** **Amazon SNS** executes a "Fan-out" pattern to instantly broadcast alerts to administrators via Email/SMS with near-zero latency.
 
 ---
 
