@@ -41,12 +41,19 @@
         /* Buttons & Tags */
         .btn { text-decoration: none; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; text-align: center; display: inline-block; }
         .btn:hover { background: #3b82f6; }
-        .btn-disabled { background: #475569; cursor: not-allowed; pointer-events: none; opacity: 0.7; }
+        
+        /* Disabled state styling */
+        .card-menu.disabled { opacity: 0.7; cursor: not-allowed; }
+        .card-menu.disabled:hover { transform: none; border-color: #334155; box-shadow: none; }
+        .btn-disabled { background: #334155; cursor: not-allowed; pointer-events: none; border: 1px solid #475569; color: #94a3b8; }
         
         .tech-tag { background: #334155; color: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px; display: inline-block; margin-top: 5px; }
         .badge { font-size: 0.7rem; padding: 2px 5px; border-radius: 4px; }
         .bg-live { background: #059669; color: white; }
         .bg-soon { background: #ca8a04; color: black; }
+        .bg-maintenance { background: #f59e0b; color: black; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
         /* Mobile Responsive */
         @media (max-width: 900px) { 
@@ -62,7 +69,6 @@
     <div class="profile-card">
         <div class="profile-left">
             <img src="profile.jpg" alt="Tuấn Anh" class="profile-img">
-            
             <h2 style="color: #e2e8f0; margin: 10px 0 5px;">Tuấn Anh</h2>
             <div style="color: #38bdf8; font-weight: bold; letter-spacing: 1px;">CLOUD SOLUTIONS ARCHITECT</div>
             
@@ -87,11 +93,9 @@
 
             <div class="cert-section">
                 <h3 style="color: #fbbf24; margin-top: 0; padding-bottom: 5px;">CERTIFICATION</h3>
-                
                 <a href="https://www.credly.com/badges/f3d0934e-0c55-49df-b94f-dc475f0f0ac4/linked_in_profile" target="_blank" style="text-decoration: none;">
                     <div class="cert-badge-container">
                         <img src="https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png" alt="AWS SAA Badge" class="cert-img">
-                        
                         <div>
                             <div style="color: #e2e8f0; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">
                                 AWS Certified Solutions Architect – Associate
@@ -110,7 +114,7 @@
         </div>
     </div>
 
-  <div class="grid-container">
+    <div class="grid-container">
         <div class="card-menu">
             <div>
                 <h3>📡 NET_PROBE <span class="badge bg-live">LIVE</span></h3>
@@ -119,19 +123,18 @@
             <a href="netprobe.html" class="btn">LAUNCH MODULE</a>
         </div>
 
-        <div class="card-menu" style="opacity: 0.7; position: relative;">
+        <div class="card-menu disabled">
             <div style="pointer-events: none; filter: grayscale(30%);">
-                <h3>👤 FACE BIOMETRIC <span class="badge" style="background: #f59e0b; color: black;">MAINTENANCE</span></h3>
+                <h3>👤 FACE BIOMETRIC <span class="badge bg-maintenance">MAINTENANCE</span></h3>
                 <p style="color:#cbd5e1; font-size:0.9rem;">PoC: Facial similarity analysis using AWS Rekognition & Bedrock.</p>
             </div>
-            <a href="#" class="btn btn-disabled" style="background: #334155; border: 1px solid #475569;">UNDER REFACTORING 🛠️</a>
-            
+            <a href="#" class="btn btn-disabled">UNDER REFACTORING 🛠️</a>
             <div style="font-size: 0.65rem; color: #64748b; margin-top: 5px; font-style: italic;">
-                * System optimization in progress for Bedrock token streaming.
+                * Architecture optimization for Bedrock token streaming in progress.
             </div>
         </div>
 
-        <div class="card-menu">
+        <div class="card-menu disabled">
             <div>
                 <h3>🤖 AI ASSISTANT <span class="badge bg-soon">SOON</span></h3>
                 <p style="color:#cbd5e1; font-size:0.9rem;">Intelligent chatbot powered by AWS Bedrock and Amazon Lex.</p>
