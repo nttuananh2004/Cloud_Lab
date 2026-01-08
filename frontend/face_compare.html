@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 2: FaceGuard</title>
+    <style>
+        /* --- COPY STYLE TỪ NETPROBE QUA CHO ĐỒNG BỘ --- */
+        body { background: #0f172a; color: #e2e8f0; font-family: 'Courier New', monospace; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; position: relative; }
+        
+        .back-btn { position: absolute; top: 20px; left: 20px; text-decoration: none; background: #334155; color: white; padding: 8px 15px; font-size: 0.9rem; border-radius: 4px; font-weight: bold; }
+        .back-btn:hover { background: #475569; }
+
+        .card { background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155; width: 450px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+        h2 { color: #fbbf24; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 15px; letter-spacing: 1px;}
+        
+        .stat { display: flex; justify-content: space-between; margin: 12px 0; border-bottom: 1px dashed #334155; padding-bottom: 5px;}
+        .val { font-weight: bold; color: #38bdf8; }
+        
+        button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; margin-top: 20px; font-family: monospace; font-weight: bold; font-size: 1rem; transition: all 0.2s;}
+        button:hover { background: #1d4ed8; transform: translateY(-1px); }
+        button:disabled { background: #475569; cursor: not-allowed; }
+
+        /* --- STYLE RIÊNG CHO UPLOAD ẢNH --- */
+        .upload-area { display: flex; gap: 10px; margin-bottom: 15px; }
+        .upload-box { flex: 1; border: 1px dashed #475569; padding: 10px; border-radius: 6px; text-align: center; cursor: pointer; position: relative; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden;}
+        .upload-box:hover { border-color: #38bdf8; background: #1e293b; }
+        .upload-box img { max-width: 100%; max-height: 100%; display: none; }
+        .upload-box span { font-size: 0.7rem; color: #94a3b8; }
+        input[type="file"] { position: absolute; width: 100%; height: 100%; top: 0; left: 0; opacity: 0; cursor: pointer; }
+
+        .ai-analysis { background: #0f172a; padding: 10px; border-radius: 6px; font-size: 0.8rem; color: #cbd5e1; margin-top: 10px; border: 1px solid #334155; display: none;}
+        .ai-title { color: #fbbf24; font-weight: bold; margin-bottom: 5px; display: block; border-bottom: 1px solid #334155; padding-bottom: 3px;}
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">⬅ DASHBOARD</a>
+
+    <div class="card">
+        <h2>👤 MODULE 2: FACE_GUARD</h2>
+        
+        <div class="upload-area">
+            <div class="upload-box" id="box1">
+                <span id="lbl1">Tap to Upload<br>ID CARD / SOURCE</span>
+                <img id="preview1">
+                <input type="file" id="file1" accept="image/*" onchange="previewImage(this, 'preview1', 'lbl1')">
+            </div>
+            <div class="upload-box" id="box2">
+                <span id="lbl2">Tap to Upload<br>SELFIE / TARGET</span>
+                <img id="preview2">
+                <input type="file" id="file2" accept="image/*" onchange="previewImage(this, 'preview2', 'lbl2')">
+            </div>
+        </div>
+
+        <div class="stat"><span>MATCH RESULT:</span> <span id="status" class="val">---</span></div>
+        <div class="stat" style="border:none"><span>SIMILARITY SCORE:</span> <span id="score" class="val">---</span></div>
+
+        <div id="ai-result" class="ai-analysis">
+            <span class="ai-title">🤖 AI ANALYSIS (CLAUDE 3):</span>
+            <p id="analysis-en" style="margin: 5px 0; font-style: italic;">Processing...</p>
+            <p id="analysis-vn" style="margin: 5px 0; color: #94a3b8;">...</p>
+        </div>
+
+        <button onclick="compareFaces()">VERIFY IDENTITY</button>
+    </div>
+
+    <script>
+       
+        const API_URL = "https://mb05ts26n2.execute-api.ap-southeast-1.amazonaws.com/face-compare"; 
+
+        // Hàm xem trước ảnh khi chọn
+        function previewImage(input, imgId, lblId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(imgId).src = e.target.result;
+                    document.getElementById(imgId).style.display = 'block';
+                    document.getElementById(lblId).style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function compareFaces() {
+            const f1 = document.getElementById('file1').files[0];
+            const f2 = document.getElementById('file2').files[0];
+
+            if (!f1 || !f2) { alert("⚠ Please upload both images first!"); return; }
+
+            const btn = document.querySelector('button');
+            const aiDiv = document.getElementById('ai-result');
+            
+            btn.innerText = "ANALYZING BIOMETRICS...";
+            btn.disabled = true;
+            aiDiv.style.display = 'none'; // Ẩn kết quả cũ
+
+            // Convert file sang Base64
+            const toBase64 = file => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result); // Giữ nguyên header data:image...
+                reader.onerror = error => reject(error);
+            });
+
+            try {
+                const img1 = await toBase64(f1);
+                const img2 = await toBase64(f2);
+
+                // Gửi request POST
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ source: img1, target: img2 })
+                });
+
+                const data = await res.json();
+
+                if (data.error) throw new Error(data.error);
+                
+                // Hiển thị kết quả chính
+                const statusElem = document.getElementById('status');
+                statusElem.innerText = data.matched ? "MATCHED ✅" : "NOT MATCHED ❌";
+                statusElem.style.color = data.matched ? "#4ade80" : "#f87171";
+                
+                document.getElementById('score').innerText = data.similarity + "%";
+
+                // Hiển thị kết quả AI
+                if (data.analysis_en) {
+                    aiDiv.style.display = 'block';
+                    document.getElementById('analysis-en').innerText = '"' + data.analysis_en + '"';
+                    document.getElementById('analysis-vn').innerText = data.analysis_vn;
+                }
+
+            } catch (e) {
+                console.error(e);
+                alert("Error connecting to Server: " + e.message);
+            }
+            
+            btn.innerText = "VERIFY IDENTITY";
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
