@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS | Emergency Uplink</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* --- TACTICAL THEME CONFIGURATION --- */
+        :root {
+            --bg-core: #0f1115;
+            --panel-bg: #181b21;
+            --danger-red: #ef4444;
+            --danger-glow: rgba(239, 68, 68, 0.4);
+            --text-primary: #e2e8f0;
+            --text-muted: #64748b;
+            --border-line: #334155;
+            --terminal-green: #10b981;
+        }
+
+        body {
+            background-color: var(--bg-core);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 550px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- NAVIGATION --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .top-nav a { color: var(--text-muted); text-decoration: none; transition: 0.3s; }
+        .top-nav a:hover { color: white; }
+
+        /* --- MAIN CONTROL PANEL --- */
+        .control-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-line);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.7);
+            border-top: 4px solid var(--danger-red);
+            position: relative;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-red);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--danger-red);
+            font-family: 'Fira Code', monospace;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        .description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        /* --- INPUT FIELD --- */
+        .input-group { margin-bottom: 25px; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 8px; color: var(--text-muted); font-family: 'Fira Code', monospace; }
+        
+        input[type="text"] {
+            width: 100%;
+            background: #000;
+            border: 1px solid var(--border-line);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
+        input[type="text"]:focus { outline: none; border-color: var(--danger-red); }
+
+        /* --- TRIGGER BUTTON --- */
+        .btn-trigger {
+            width: 100%;
+            padding: 18px;
+            background: var(--danger-red);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 20px var(--danger-glow);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-trigger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px var(--danger-glow);
+        }
+
+        .btn-trigger:active { transform: scale(0.98); }
+
+        .btn-trigger:disabled {
+            background: #334155;
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #94a3b8;
+        }
+
+        /* --- TERMINAL OUTPUT --- */
+        .terminal {
+            background: #050505;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            height: 150px;
+            overflow-y: auto;
+            color: var(--terminal-green);
+            display: flex;
+            flex-direction: column-reverse; /* New logs at bottom visually if auto-scroll */
+        }
+        
+        .log-entry { margin-bottom: 5px; border-left: 2px solid transparent; padding-left: 5px; }
+        .log-error { color: var(--danger-red); border-left-color: var(--danger-red); }
+        .log-warn { color: #facc15; }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <div class="top-nav">
+            <span>SECURE_CHANNEL_V2</span>
+            <a href="index.html">[ ESC ] RETURN TO DASHBOARD</a>
+        </div>
+
+        <div class="control-panel">
+            <h1>Emergency Uplink <span class="status-badge">ARMED</span></h1>
+            <p class="description">
+                This module utilizes <strong>HTML5 Geolocation API</strong> to acquire precise coordinates and broadcasts a distress signal via <strong>AWS SNS</strong>.
+            </p>
+
+            <div class="input-group">
+                <label>// SITUATION_REPORT (MESSAGE)</label>
+                <input type="text" id="userMessage" value="Requesting immediate extraction." placeholder="Enter brief status...">
+            </div>
+
+            <button id="broadcastBtn" class="btn-trigger" onclick="executeProtocol()">
+                INITIATE BROADCAST
+            </button>
+        </div>
+
+        <div class="terminal" id="consoleOutput">
+            <div class="log-entry">> SYSTEM STANDBY... WAITING FOR USER INPUT_</div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION: AWS API GATEWAY ENDPOINT
+        // ==========================================
+        // TODO: Replace this URL with your deployed API Gateway Invoke URL (e.g. .../prod/sos)
+        const API_URL = "https://mb05ts26n2.execute-api.ap-southeast-1.amazonaws.com/sos"; 
+
+        /**
+         * Utility: Appends logs to the UI terminal
+         * @param {string} text - The message to display
+         * @param {string} type - 'info', 'error', 'warn'
+         */
+        function log(text, type = 'info') {
+            const terminal = document.getElementById('consoleOutput');
+            const entry = document.createElement('div');
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            
+            entry.className = `log-entry ${type === 'error' ? 'log-error' : ''}`;
+            entry.innerText = `[${time}] ${text}`;
+            
+            // Insert at the top of the terminal
+            terminal.insertBefore(entry, terminal.firstChild);
+        }
+
+        /**
+         * Main Execution Flow
+         * 1. UI Lock -> 2. Get GPS -> 3. Send API Request -> 4. UI Unlock
+         */
+        function executeProtocol() {
+            const btn = document.getElementById('broadcastBtn');
+            const msgInput = document.getElementById('userMessage');
+
+            // 1. Lock UI
+            btn.disabled = true;
+            btn.innerText = "PROCESSING...";
+            log("INITIATING EMERGENCY SEQUENCE...", "warn");
+
+            // 2. Geolocation Acquisition
+            if (!navigator.geolocation) {
+                log("ERROR: Geolocation hardware not found.", "error");
+                sendPayload(null, null, msgInput.value); // Fallback send without GPS
+                return;
+            }
+
+            log("REQUESTING SATELLITE HANDSHAKE (GPS)...");
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Success: GPS Locked
+                    const { latitude, longitude, accuracy } = position.coords;
+                    log(`GPS LOCKED: ${latitude.toFixed(5)}, ${longitude.toFixed(5)} (±${accuracy}m)`);
+                    sendPayload(latitude, longitude, msgInput.value);
+                },
+                (error) => {
+                    // Error: User denied or Timeout
+                    log(`GPS ERROR: ${error.message} (Code: ${error.code})`, "error");
+                    log("SWITCHING TO MANUAL MODE (No Location Data)...", "warn");
+                    sendPayload(null, null, msgInput.value);
+                },
+                { 
+                    enableHighAccuracy: true, 
+                    timeout: 10000, 
+                    maximumAge: 0 
+                }
+            );
+        }
+
+        /**
+         * Networking: Transmit data to AWS Lambda via API Gateway
+         */
+        async function sendPayload(lat, long, message) {
+            log("OPENING SECURE CHANNEL TO AWS CLOUD...");
+
+            const payload = {
+                message: message,
+                location: lat ? { lat: lat, long: long } : null
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`SUCCESS: Payload Delivered. Ref ID: ${data.sns_id}`, "info");
+                    alert(`✅ SYSTEM ALERT:\nSignal Broadcasted Successfully!\nCheck your email for the coordinate map.`);
+                } else {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+            } catch (error) {
+                log(`CRITICAL FAILURE: ${error.message}`, "error");
+            } finally {
+                // Reset UI
+                const btn = document.getElementById('broadcastBtn');
+                btn.disabled = false;
+                btn.innerText = "INITIATE BROADCAST";
+                log("SEQUENCE COMPLETE. STANDBY.");
+            }
+        }
+    </script>
+</body>
+</html>
