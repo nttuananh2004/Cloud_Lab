@@ -3,62 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudLab | Serverless Portfolio</title>
+    <title>Tuấn Anh | AWS Cloud Architect Portfolio</title>
     <style>
-        /* GLOBAL STYLES */
-        body { background: #0b1120; color: #e2e8f0; font-family: 'Courier New', monospace; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+        /* --- GLOBAL STYLES --- */
+        body { background: #0b1120; color: #e2e8f0; font-family: 'Courier New', monospace; margin: 0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 40px; }
         
-        /* HEADER & PROFILE */
-        header { text-align: center; margin-top: 40px; margin-bottom: 30px; }
-        h1 { font-size: 2.5rem; color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); margin: 0; letter-spacing: 2px; }
-        .subtitle { color: #94a3b8; font-size: 0.9rem; margin-top: 5px; }
+        /* --- PROFILE CARD STYLES --- */
+        .profile-card { background: #1e293b; width: 90%; max-width: 1200px; border: 1px solid #334155; border-radius: 12px; padding: 30px; margin-bottom: 40px; display: flex; gap: 40px; align-items: flex-start; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
+        .profile-left { flex: 1; text-align: center; border-right: 1px dashed #334155; padding-right: 30px; }
+        .profile-right { flex: 2; display: flex; flex-direction: column; gap: 20px; }
+        
+        /* Avatar Image */
+        .profile-img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 4px solid #38bdf8; margin-bottom: 15px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
 
-        .profile-card { background: #1e293b; width: 90%; max-width: 1000px; border: 1px solid #334155; border-radius: 12px; padding: 25px; margin-bottom: 30px; display: flex; gap: 30px; align-items: center; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); }
-        .profile-left { flex: 1; text-align: center; border-right: 1px dashed #334155; padding-right: 20px; }
-        .profile-right { flex: 2; }
+        /* Social Buttons */
+        .social-links { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+        .btn-social { text-decoration: none; color: white; padding: 8px 12px; border-radius: 6px; font-weight: bold; font-size: 0.75rem; transition: all 0.2s; display: flex; align-items: center; gap: 5px;}
+        .btn-social:hover { transform: translateY(-2px); }
         
-        /* GRID MENU */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; width: 90%; max-width: 1000px; }
-        .card-menu { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; transition: all 0.2s; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .btn-github { background: #334155; } .btn-github:hover { background: #475569; }
+        .btn-linkedin { background: #0077b5; } .btn-linkedin:hover { background: #005582; }
+        .btn-facebook { background: #1877f2; } .btn-facebook:hover { background: #0c5dc7; }
+        .btn-instagram { background: #e4405f; } .btn-instagram:hover { background: #c13584; }
+
+        /* Certification Section */
+        .cert-section { border-top: 1px dashed #334155; padding-top: 20px; }
+        .cert-badge-container { display: flex; gap: 20px; align-items: center; margin-top: 15px; background: #0f172a; padding: 15px; border-radius: 8px; border: 1px solid #334155; transition: border-color 0.3s; }
+        .cert-badge-container:hover { border-color: #fbbf24; }
+        .cert-img { width: 100px; height: 100px; object-fit: contain; }
+
+        /* --- MODULE GRID STYLES --- */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; width: 90%; max-width: 1200px; }
+        .card-menu { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 25px; transition: all 0.2s; position: relative; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; }
         .card-menu:hover { transform: translateY(-5px); border-color: #38bdf8; box-shadow: 0 10px 30px -10px rgba(56, 189, 248, 0.2); }
         .card-menu h3 { color: #fbbf24; margin-top: 0; display: flex; justify-content: space-between; align-items: center; }
         
-        /* BUTTONS & TAGS */
+        /* Buttons & Tags */
         .btn { text-decoration: none; background: #2563eb; color: white; padding: 10px 20px; border-radius: 6px; font-weight: bold; margin-top: 15px; text-align: center; display: inline-block; }
         .btn:hover { background: #3b82f6; }
-        .btn-disabled { background: #475569; cursor: not-allowed; pointer-events: none; }
+        .btn-disabled { background: #475569; cursor: not-allowed; pointer-events: none; opacity: 0.7; }
         
         .tech-tag { background: #334155; color: #e2e8f0; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; margin-right: 5px; display: inline-block; margin-top: 5px; }
         .badge { font-size: 0.7rem; padding: 2px 5px; border-radius: 4px; }
         .bg-live { background: #059669; color: white; }
-        .bg-beta { background: #ca8a04; color: black; }
+        .bg-soon { background: #ca8a04; color: black; }
 
-        @media (max-width: 768px) { .profile-card { flex-direction: column; text-align: center; } .profile-left { border-right: none; border-bottom: 1px dashed #334155; padding-bottom: 20px; padding-right: 0; } }
+        /* Mobile Responsive */
+        @media (max-width: 900px) { 
+            .profile-card { flex-direction: column; text-align: center; } 
+            .profile-left { border-right: none; border-bottom: 1px dashed #334155; padding-bottom: 30px; padding-right: 0; } 
+            .social-links { justify-content: center; }
+            .cert-badge-container { flex-direction: column; text-align: center; }
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>CLOUD_LAB v1.0</h1>
-        <div class="subtitle">AWS ARCHITECTURE PORTFOLIO</div>
-    </header>
-
     <div class="profile-card">
         <div class="profile-left">
-            <div style="font-size: 4rem; margin-bottom: 10px;">👨‍💻</div>
-            <h2 style="color: #e2e8f0; margin: 0;">[YOUR NAME]</h2>
-            <div style="color: #38bdf8; font-weight: bold; margin-top: 5px;">CLOUD SOLUTIONS ARCHITECT</div>
-            <div style="margin-top: 15px;">
-                <a href="https://github.com/nttuananh2004" target="_blank" class="btn" style="background: #334155; font-size: 0.8rem; padding: 5px 15px;">GITHUB</a>
+            <img src="profile.jpg" alt="Tuấn Anh" class="profile-img">
+            
+            <h2 style="color: #e2e8f0; margin: 10px 0 5px;">Tuấn Anh</h2>
+            <div style="color: #38bdf8; font-weight: bold; letter-spacing: 1px;">CLOUD SOLUTIONS ARCHITECT</div>
+            
+            <div class="social-links">
+                <a href="https://github.com/nttuananh2004" target="_blank" class="btn-social btn-github">GITHUB</a>
+                <a href="https://www.linkedin.com/in/nguyen-tran-tuan-anh-534a5b1a5/" target="_blank" class="btn-social btn-linkedin">LINKEDIN</a>
+                <a href="https://www.facebook.com/nttuananh2004/" target="_blank" class="btn-social btn-facebook">FACEBOOK</a>
+                <a href="https://www.instagram.com/tuananh17th_nov/" target="_blank" class="btn-social btn-instagram">INSTAGRAM</a>
             </div>
         </div>
+        
         <div class="profile-right">
-            <h3 style="color: #fbbf24; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 10px;">SYSTEM SPECIFICATIONS</h3>
-            <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">
-                Specialized in building scalable <b>Serverless Architectures</b> on AWS. Focus on high-availability systems and cost optimization. Currently preparing for <span style="color:#38bdf8">AWS Solutions Architect Associate (SAA-C03)</span>.
-            </p>
             <div>
-                <span class="tech-tag">AWS Lambda</span><span class="tech-tag">API Gateway</span><span class="tech-tag">DynamoDB</span><span class="tech-tag">Python</span>
+                <h3 style="color: #fbbf24; margin-top: 0; border-bottom: 1px solid #334155; padding-bottom: 10px;">SYSTEM SPECIFICATIONS</h3>
+                <p style="color: #cbd5e1; font-size: 0.9rem; line-height: 1.6;">
+                    Specialized in building scalable <b>Serverless Architectures</b> on AWS. Focus on high-availability systems, automation, and cost optimization.
+                </p>
+                <div>
+                    <span class="tech-tag">AWS Lambda</span><span class="tech-tag">API Gateway</span><span class="tech-tag">DynamoDB</span><span class="tech-tag">Python</span><span class="tech-tag">Terraform</span>
+                </div>
+            </div>
+
+            <div class="cert-section">
+                <h3 style="color: #fbbf24; margin-top: 0; padding-bottom: 5px;">CERTIFICATION</h3>
+                
+                <a href="https://www.credly.com/badges/f3d0934e-0c55-49df-b94f-dc475f0f0ac4/linked_in_profile" target="_blank" style="text-decoration: none;">
+                    <div class="cert-badge-container">
+                        <img src="https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png" alt="AWS SAA Badge" class="cert-img">
+                        
+                        <div>
+                            <div style="color: #e2e8f0; font-weight: bold; font-size: 1.1rem; margin-bottom: 5px;">
+                                AWS Certified Solutions Architect – Associate
+                            </div>
+                            <div style="color: #94a3b8; font-size: 0.85rem; line-height: 1.5;">
+                                Issued: <b>December 25, 2025</b> <br>
+                                Expires: <b>December 25, 2028</b>
+                            </div>
+                            <div style="color: #38bdf8; font-size: 0.8rem; margin-top: 8px; text-decoration: underline;">
+                                Verify Authenticity on Credly ↗
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
@@ -72,17 +119,25 @@
             <a href="netprobe.html" class="btn">LAUNCH MODULE</a>
         </div>
 
-        <div class="card-menu" style="opacity: 0.6; border-style: dashed;">
+        <div class="card-menu">
             <div>
-                <h3>👤 FACE_GUARD <span class="badge bg-beta">SOON</span></h3>
+                <h3>👤 FACE_GUARD <span class="badge bg-soon">SOON</span></h3>
                 <p style="color:#cbd5e1; font-size:0.9rem;">Identity verification (E-KYC) using AWS Rekognition & S3.</p>
+            </div>
+            <a href="#" class="btn btn-disabled">LOCKED 🔒</a>
+        </div>
+
+        <div class="card-menu">
+            <div>
+                <h3>🤖 AI ASSISTANT <span class="badge bg-soon">SOON</span></h3>
+                <p style="color:#cbd5e1; font-size:0.9rem;">Intelligent chatbot powered by AWS Bedrock and Amazon Lex.</p>
             </div>
             <a href="#" class="btn btn-disabled">LOCKED 🔒</a>
         </div>
     </div>
     
-    <div style="margin-top: 50px; color: #475569; font-size: 0.8rem;">
-        SYSTEM STATUS: ONLINE | REGION: AP-SOUTHEAST-1
+    <div style="margin-top: 50px; color: #475569; font-size: 0.8rem; padding-bottom: 20px;">
+        SYSTEM STATUS: ONLINE | REGION: AP-SOUTHEAST-1 | © 2026 Tuấn Anh
     </div>
 
 </body>
