@@ -110,7 +110,7 @@
         </div>
     </div>
 
-    <div class="grid-container">
+  <div class="grid-container">
         <div class="card-menu">
             <div>
                 <h3>📡 NET_PROBE <span class="badge bg-live">LIVE</span></h3>
@@ -119,12 +119,16 @@
             <a href="netprobe.html" class="btn">LAUNCH MODULE</a>
         </div>
 
-        <div class="card-menu">
-            <div>
-                <h3>👤 FACE_GUARD <span class="badge bg-live">LIVE</span></h3>
-                <p style="color:#cbd5e1; font-size:0.9rem;">Identity verification (E-KYC) using AWS Rekognition & S3.</p>
+        <div class="card-menu" style="opacity: 0.7; position: relative;">
+            <div style="pointer-events: none; filter: grayscale(30%);">
+                <h3>👤 FACE BIOMETRIC <span class="badge" style="background: #f59e0b; color: black;">MAINTENANCE</span></h3>
+                <p style="color:#cbd5e1; font-size:0.9rem;">PoC: Facial similarity analysis using AWS Rekognition & Bedrock.</p>
             </div>
-            <a href="facecomparison.html" class="btn">START VERIFICATION</a>
+            <a href="#" class="btn btn-disabled" style="background: #334155; border: 1px solid #475569;">UNDER REFACTORING 🛠️</a>
+            
+            <div style="font-size: 0.65rem; color: #64748b; margin-top: 5px; font-style: italic;">
+                * System optimization in progress for Bedrock token streaming.
+            </div>
         </div>
 
         <div class="card-menu">
