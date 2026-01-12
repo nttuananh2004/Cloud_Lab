@@ -84,7 +84,16 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        h3.section-title { color: var(--accent-blue); font-size: 1.1rem; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        h3.section-title { 
+            color: var(--accent-blue); 
+            font-size: 1.1rem; 
+            margin-bottom: 15px; 
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            padding-bottom: 5px;
+            display: inline-block;
+        }
 
         ul.specs { list-style: none; padding: 0; }
         ul.specs li { 
@@ -133,6 +142,7 @@
             border-radius: 8px;
             transition: all 0.3s;
             font-weight: 600;
+            font-family: 'Fira Code', monospace;
         }
         .btn-back:hover { background: var(--card-bg); color: var(--text-main); border-color: var(--accent-blue); }
 
@@ -141,7 +151,7 @@
 <body>
 
 <div class="container">
-    <a href="index.html" class="btn-back">← Back to Portfolio</a>
+    <a href="index.html" class="btn-back"><< BACK TO PORTFOLIO</a>
 
     <header>
         <div style="margin-top: 20px; font-family: 'Fira Code'; color: var(--accent-yellow); font-size: 0.9rem;">CONFIDENTIAL // INTERNAL USE ONLY</div>
@@ -157,13 +167,13 @@
         <p style="color: var(--text-muted);">Distributed Network Diagnostic and Geo-Auditing Engine designed for real-time latency analysis.</p>
 
         <div class="diagram-box">
-            <img src="../assets/Net_probe.png" alt="Net Probe Architecture" class="diagram-img">
+            <img src="assets/Net_probe.png" alt="Net Probe Architecture" class="diagram-img">
             <div class="caption">Figure 1.1: Event-driven Serverless Architecture (Region: ap-southeast-1)</div>
         </div>
 
         <div class="grid-2">
             <div>
-                <h3 class="section-title">🛠 Tech Stack Highlights</h3>
+                <h3 class="section-title">Tech Stack Highlights</h3>
                 <ul class="specs">
                     <li><strong>Ingestion:</strong> AWS API Gateway (RESTful)</li>
                     <li><strong>Compute:</strong> AWS Lambda (Python 3.x) - Non-blocking probes</li>
@@ -172,7 +182,7 @@
                 </ul>
             </div>
             <div>
-                <h3 class="section-title">🔄 Data Workflow</h3>
+                <h3 class="section-title">Data Workflow</h3>
                 <div class="step"><strong>STEP 1</strong> Client sends ICMP/TCP request via API Gateway.</div>
                 <div class="step"><strong>STEP 2</strong> Lambda executes network probe across region boundary.</div>
                 <div class="step"><strong>STEP 3</strong> Results are structured & persisted to DynamoDB.</div>
@@ -189,13 +199,13 @@
         <p style="color: var(--text-muted);">AI-Enhanced Verification System integrating Computer Vision & LLMs. (Currently optimizing concurrency).</p>
 
         <div class="diagram-box">
-            <img src="../assets/face_biometric.png" alt="Biometric Architecture" class="diagram-img">
+            <img src="assets/face_biometric.png" alt="Biometric Architecture" class="diagram-img">
             <div class="caption">Figure 2.1: AI Pipeline integrating Rekognition & Bedrock</div>
         </div>
 
         <div class="grid-2">
             <div>
-                <h3 class="section-title">🛠 Tech Stack Highlights</h3>
+                <h3 class="section-title">Tech Stack Highlights</h3>
                 <ul class="specs">
                     <li><strong>Orchestration:</strong> AWS Lambda (Payload normalization)</li>
                     <li><strong>Vision AI:</strong> Amazon Rekognition (Vector extraction)</li>
@@ -203,7 +213,7 @@
                 </ul>
             </div>
             <div>
-                <h3 class="section-title">🔄 Intelligence Pipeline</h3>
+                <h3 class="section-title">Intelligence Pipeline</h3>
                 <div class="step"><strong>STEP 1</strong> Base64 image payload hits API Gateway.</div>
                 <div class="step"><strong>STEP 2</strong> Lambda coordinates async calls to AI services.</div>
                 <div class="step"><strong>STEP 3</strong> Bedrock synthesizes security report.</div>
@@ -219,13 +229,13 @@
         <p style="color: var(--text-muted);">Tactical Emergency Uplink bridging HTML5 Geolocation with Cloud Notification systems.</p>
 
         <div class="diagram-box">
-            <img src="../assets/sos.png" alt="SOS Architecture" class="diagram-img">
+            <img src="assets/sos.png" alt="SOS Architecture" class="diagram-img">
             <div class="caption">Figure 3.1: High-availability Broadcast System</div>
         </div>
 
         <div class="grid-2">
             <div>
-                <h3 class="section-title">🛠 Tech Stack Highlights</h3>
+                <h3 class="section-title">Tech Stack Highlights</h3>
                 <ul class="specs">
                     <li><strong>Telemetry:</strong> HTML5 Geolocation API (Client-side)</li>
                     <li><strong>Broadcast:</strong> Amazon SNS (Fan-out pattern)</li>
@@ -233,7 +243,7 @@
                 </ul>
             </div>
             <div>
-                <h3 class="section-title">🔄 Emergency Flow</h3>
+                <h3 class="section-title">Emergency Flow</h3>
                 <div class="step"><strong>STEP 1</strong> Browser captures High-Precision GPS Coords.</div>
                 <div class="step"><strong>STEP 2</strong> API Gateway ingests distress signal via Webhook.</div>
                 <div class="step"><strong>STEP 3</strong> SNS blasts SMS/Email to Admins instantly.</div>
@@ -242,7 +252,7 @@
     </section>
 
     <div class="security-note">
-        <h3 style="color: var(--accent-yellow); margin-top: 0;">🔒 SECURITY COMPLIANCE NOTICE</h3>
+        <h3 style="color: var(--accent-yellow); margin-top: 0;">SECURITY COMPLIANCE NOTICE</h3>
         <p style="margin-bottom: 0;">
             To strictly adhere to <strong>AWS Security Best Practices</strong> regarding credential management and infrastructure protection, the source code repository is currently <strong>PRIVATE</strong>.
             <br><br>
