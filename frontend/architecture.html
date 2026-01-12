@@ -4,18 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Architecture | Cloud Lab</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- GLOBAL STYLES (Đồng bộ với index.html) --- */
+        /* =========================================
+           1. GLOBAL VARIABLES & RESET
+           ========================================= */
         :root {
-            --bg-dark: #0b1120;
-            --card-bg: #1e293b;
-            --border-color: #334155;
-            --accent-blue: #38bdf8;
-            --accent-yellow: #fbbf24;
-            --accent-red: #ef4444;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
+            --bg-dark: #0b1120;       /* Deep Navy Background */
+            --card-bg: #1e293b;       /* Slate Card Background */
+            --border-color: #334155;  /* Subtle Border */
+            --accent-blue: #38bdf8;   /* Primary Accent (Sky Blue) */
+            --accent-yellow: #fbbf24; /* Warning/Highlight (Amber) */
+            --accent-red: #ef4444;    /* Danger/Maintenance (Red) */
+            --text-main: #e2e8f0;     /* High Contrast Text */
+            --text-muted: #94a3b8;    /* Secondary Text */
         }
 
         body { 
@@ -32,12 +36,21 @@
         h1, h2, h3 { font-family: 'Inter', sans-serif; font-weight: 700; color: var(--text-main); }
         code, .tech-tag { font-family: 'Fira Code', monospace; }
 
-        /* HEADER */
-        header { text-align: center; margin-bottom: 60px; border-bottom: 1px solid var(--border-color); padding-bottom: 30px; }
+        /* =========================================
+           2. HEADER SECTION
+           ========================================= */
+        header { 
+            text-align: center; 
+            margin-bottom: 60px; 
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 30px; 
+        }
         header h1 { font-size: 2.5rem; color: var(--accent-blue); margin-bottom: 10px; }
         header p { color: var(--text-muted); font-size: 1.1rem; }
 
-        /* MODULE SECTION */
+        /* =========================================
+           3. MODULE CONTAINERS
+           ========================================= */
         .module-section { margin-bottom: 80px; }
         
         .module-header { 
@@ -50,6 +63,8 @@
         }
         
         .module-title { font-size: 1.8rem; color: var(--accent-yellow); margin: 0; }
+        
+        /* Status Badges */
         .badge { 
             background: var(--border-color); 
             padding: 4px 10px; 
@@ -58,30 +73,50 @@
             font-weight: 700; 
             text-transform: uppercase; 
         }
-        .bg-live { background: #059669; color: white; }
-        .bg-maintenance { background: #ef4444; color: white; }
+        .bg-live { background: #059669; color: white; }        /* Emerald Green */
+        .bg-maintenance { background: #ef4444; color: white; } /* Red */
 
-        /* DIAGRAM BOX */
+        /* =========================================
+           4. DIAGRAM VISUALIZATION (FIXED)
+           ========================================= */
         .diagram-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
+            padding: 30px; 
             text-align: center;
             margin-bottom: 30px;
             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
         }
+
+        /* * IMAGE STYLING:
+         * Keeping the white background to ensure AWS Icons retain original colors.
+         * Added padding and shadow for a 'card-on-card' effect.
+         */
         .diagram-img { 
             max-width: 100%; 
             height: auto; 
             border-radius: 8px; 
             max-height: 500px; 
             object-fit: contain;
+            background-color: white; /* Force white bg for visibility */
+            padding: 10px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
         }
-        .caption { font-size: 0.85rem; color: var(--text-muted); margin-top: 10px; font-style: italic; }
 
-        /* TECH GRID */
+        .caption { 
+            font-size: 0.85rem; 
+            color: var(--text-muted); 
+            margin-top: 15px; 
+            font-style: italic; 
+        }
+
+        /* =========================================
+           5. TECH SPECS GRID
+           ========================================= */
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        
+        /* Responsive fallback */
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
         h3.section-title { 
@@ -103,14 +138,14 @@
             color: var(--text-muted);
         }
         ul.specs li::before {
-            content: "▹";
+            content: "▹"; /* Custom bullet point */
             color: var(--accent-yellow);
             position: absolute;
             left: 0;
         }
         strong { color: var(--text-main); }
 
-        /* FLOW STEPS */
+        /* Workflow Steps Styling */
         .step {
             background: rgba(255,255,255,0.03);
             padding: 12px 15px;
@@ -119,11 +154,18 @@
             border-left: 3px solid var(--border-color);
             font-size: 0.95rem;
         }
-        .step strong { color: var(--accent-blue); font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-right: 10px; }
+        .step strong { 
+            color: var(--accent-blue); 
+            font-family: 'Fira Code', monospace; 
+            font-size: 0.9rem; 
+            margin-right: 10px; 
+        }
 
-        /* SECURITY NOTE */
+        /* =========================================
+           6. COMPLIANCE & NAVIGATION
+           ========================================= */
         .security-note {
-            background: rgba(251, 191, 36, 0.05);
+            background: rgba(251, 191, 36, 0.05); /* Low opacity yellow */
             border: 1px solid var(--accent-yellow);
             padding: 30px;
             border-radius: 12px;
@@ -144,8 +186,11 @@
             font-weight: 600;
             font-family: 'Fira Code', monospace;
         }
-        .btn-back:hover { background: var(--card-bg); color: var(--text-main); border-color: var(--accent-blue); }
-
+        .btn-back:hover { 
+            background: var(--card-bg); 
+            color: var(--text-main); 
+            border-color: var(--accent-blue); 
+        }
     </style>
 </head>
 <body>
@@ -154,7 +199,9 @@
     <a href="index.html" class="btn-back"><< BACK TO PORTFOLIO</a>
 
     <header>
-        <div style="margin-top: 20px; font-family: 'Fira Code'; color: var(--accent-yellow); font-size: 0.9rem;">CONFIDENTIAL // INTERNAL USE ONLY</div>
+        <div style="margin-top: 20px; font-family: 'Fira Code'; color: var(--accent-yellow); font-size: 0.9rem;">
+            CONFIDENTIAL // INTERNAL USE ONLY
+        </div>
         <h1>Engineering Documentation</h1>
         <p>Enterprise-grade Serverless Infrastructure & Architectural Decision Records</p>
     </header>
@@ -167,7 +214,7 @@
         <p style="color: var(--text-muted);">Distributed Network Diagnostic and Geo-Auditing Engine designed for real-time latency analysis.</p>
 
         <div class="diagram-box">
-            <img src="assets/Net_probe.png" alt="Net Probe Architecture" class="diagram-img">
+            <img src="assets/Net_probe.png" alt="Net Probe Architecture Diagram" class="diagram-img">
             <div class="caption">Figure 1.1: Event-driven Serverless Architecture (Region: ap-southeast-1)</div>
         </div>
 
@@ -199,7 +246,7 @@
         <p style="color: var(--text-muted);">AI-Enhanced Verification System integrating Computer Vision & LLMs. (Currently optimizing concurrency).</p>
 
         <div class="diagram-box">
-            <img src="assets/face_biometric.png" alt="Biometric Architecture" class="diagram-img">
+            <img src="assets/face_biometric.png" alt="Biometric Architecture Diagram" class="diagram-img">
             <div class="caption">Figure 2.1: AI Pipeline integrating Rekognition & Bedrock</div>
         </div>
 
@@ -229,7 +276,7 @@
         <p style="color: var(--text-muted);">Tactical Emergency Uplink bridging HTML5 Geolocation with Cloud Notification systems.</p>
 
         <div class="diagram-box">
-            <img src="assets/sos.png" alt="SOS Architecture" class="diagram-img">
+            <img src="assets/sos.png" alt="SOS Architecture Diagram" class="diagram-img">
             <div class="caption">Figure 3.1: High-availability Broadcast System</div>
         </div>
 
@@ -256,7 +303,7 @@
         <p style="margin-bottom: 0;">
             To strictly adhere to <strong>AWS Security Best Practices</strong> regarding credential management and infrastructure protection, the source code repository is currently <strong>PRIVATE</strong>.
             <br><br>
-            <em>I am available to provide a full code walkthrough and explain the IaC (Terraform/SAM) implementation during the technical interview.</em>
+            <em>I am available to provide a full code walkthrough and explain the <strong>Serverless Architecture & Implementation details</strong> during the technical interview.</em>
         </p>
     </div>
 
