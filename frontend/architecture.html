@@ -9,7 +9,7 @@
     
     <style>
         /* =========================================
-           1. GLOBAL VARIABLES & RESET
+           1. DESIGN TOKENS & VARIABLES
            ========================================= */
         :root {
             --bg-dark: #0b1120;       /* Deep Navy Background */
@@ -18,10 +18,14 @@
             --accent-blue: #38bdf8;   /* Primary Accent (Sky Blue) */
             --accent-yellow: #fbbf24; /* Warning/Highlight (Amber) */
             --accent-red: #ef4444;    /* Danger/Maintenance (Red) */
+            --accent-green: #10b981;  /* Success/Concept (Emerald) */
             --text-main: #e2e8f0;     /* High Contrast Text */
             --text-muted: #94a3b8;    /* Secondary Text */
         }
 
+        /* =========================================
+           2. GLOBAL RESET & LAYOUT
+           ========================================= */
         body { 
             background: var(--bg-dark); 
             color: var(--text-main); 
@@ -37,20 +41,15 @@
         code, .tech-tag { font-family: 'Fira Code', monospace; }
 
         /* =========================================
-           2. HEADER SECTION
+           3. COMPONENT STYLES
            ========================================= */
-        header { 
-            text-align: center; 
-            margin-bottom: 60px; 
-            border-bottom: 1px solid var(--border-color); 
-            padding-bottom: 30px; 
-        }
+        
+        /* Header Section */
+        header { text-align: center; margin-bottom: 60px; border-bottom: 1px solid var(--border-color); padding-bottom: 30px; }
         header h1 { font-size: 2.5rem; color: var(--accent-blue); margin-bottom: 10px; }
         header p { color: var(--text-muted); font-size: 1.1rem; }
 
-        /* =========================================
-           3. MODULE CONTAINERS
-           ========================================= */
+        /* Module Section Container */
         .module-section { margin-bottom: 80px; }
         
         .module-header { 
@@ -65,58 +64,56 @@
         .module-title { font-size: 1.8rem; color: var(--accent-yellow); margin: 0; }
         
         /* Status Badges */
-        .badge { 
-            background: var(--border-color); 
-            padding: 4px 10px; 
-            border-radius: 6px; 
-            font-size: 0.75rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-        }
-        .bg-live { background: #059669; color: white; }        /* Emerald Green */
-        .bg-maintenance { background: #ef4444; color: white; } /* Red */
+        .badge { background: var(--border-color); padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .bg-live { background: #059669; color: white; }        
+        .bg-maintenance { background: #ef4444; color: white; } 
 
-        /* =========================================
-           4. DIAGRAM VISUALIZATION (FIXED)
-           ========================================= */
-        .diagram-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
+        /* Architecture Diagram Container */
+        .diagram-box { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
             padding: 30px; 
-            text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            text-align: center; 
+            margin-bottom: 30px; 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); 
         }
-
-        /* * IMAGE STYLING:
-         * Keeping the white background to ensure AWS Icons retain original colors.
-         * Added padding and shadow for a 'card-on-card' effect.
-         */
+        
+        /* Image Styling: White BG to preserve AWS Icon colors */
         .diagram-img { 
             max-width: 100%; 
             height: auto; 
             border-radius: 8px; 
             max-height: 500px; 
-            object-fit: contain;
-            background-color: white; /* Force white bg for visibility */
-            padding: 10px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2); 
+            object-fit: contain; 
+            background-color: white; 
+            padding: 15px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
         }
-
-        .caption { 
-            font-size: 0.85rem; 
-            color: var(--text-muted); 
-            margin-top: 15px; 
-            font-style: italic; 
-        }
-
-        /* =========================================
-           5. TECH SPECS GRID
-           ========================================= */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         
-        /* Responsive fallback */
+        .caption { font-size: 0.85rem; color: var(--text-muted); margin-top: 15px; font-style: italic; }
+
+        /* Concept/Idea Box (Simplified Style) */
+        .concept-box {
+            background: rgba(56, 189, 248, 0.05); 
+            border-left: 3px solid var(--accent-blue);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+            color: var(--text-main); 
+        }
+        .concept-title { 
+            color: var(--accent-blue); 
+            font-weight: 700; 
+            font-family: 'Fira Code', monospace; 
+            font-size: 0.85rem; 
+            margin-bottom: 5px; 
+            text-transform: uppercase; 
+        }
+
+        /* Tech Specs Grid System */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
 
         h3.section-title { 
@@ -125,72 +122,27 @@
             margin-bottom: 15px; 
             text-transform: uppercase; 
             letter-spacing: 1px; 
-            border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-            padding-bottom: 5px;
-            display: inline-block;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2); 
+            padding-bottom: 5px; 
+            display: inline-block; 
         }
 
+        /* List Styling */
         ul.specs { list-style: none; padding: 0; }
-        ul.specs li { 
-            margin-bottom: 12px; 
-            padding-left: 20px; 
-            position: relative; 
-            color: var(--text-muted);
-        }
-        ul.specs li::before {
-            content: "▹"; /* Custom bullet point */
-            color: var(--accent-yellow);
-            position: absolute;
-            left: 0;
-        }
+        ul.specs li { margin-bottom: 12px; padding-left: 20px; position: relative; color: var(--text-muted); }
+        ul.specs li::before { content: "▹"; color: var(--accent-yellow); position: absolute; left: 0; }
         strong { color: var(--text-main); }
 
-        /* Workflow Steps Styling */
-        .step {
-            background: rgba(255,255,255,0.03);
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--border-color);
-            font-size: 0.95rem;
-        }
-        .step strong { 
-            color: var(--accent-blue); 
-            font-family: 'Fira Code', monospace; 
-            font-size: 0.9rem; 
-            margin-right: 10px; 
-        }
+        /* Workflow Steps */
+        .step { background: rgba(255,255,255,0.03); padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid var(--border-color); font-size: 0.95rem; }
+        .step strong { color: var(--accent-blue); font-family: 'Fira Code', monospace; font-size: 0.9rem; margin-right: 10px; }
 
-        /* =========================================
-           6. COMPLIANCE & NAVIGATION
-           ========================================= */
-        .security-note {
-            background: rgba(251, 191, 36, 0.05); /* Low opacity yellow */
-            border: 1px solid var(--accent-yellow);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 60px;
-            color: #fef08a;
-        }
+        /* Compliance/Security Note */
+        .security-note { background: rgba(251, 191, 36, 0.05); border: 1px solid var(--accent-yellow); padding: 30px; border-radius: 12px; text-align: center; margin-top: 60px; color: #fef08a; }
 
-        .btn-back {
-            display: inline-block;
-            margin-top: 30px;
-            text-decoration: none;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-family: 'Fira Code', monospace;
-        }
-        .btn-back:hover { 
-            background: var(--card-bg); 
-            color: var(--text-main); 
-            border-color: var(--accent-blue); 
-        }
+        /* Navigation Button */
+        .btn-back { display: inline-block; margin-top: 30px; text-decoration: none; color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; transition: all 0.3s; font-weight: 600; font-family: 'Fira Code', monospace; }
+        .btn-back:hover { background: var(--card-bg); color: var(--text-main); border-color: var(--accent-blue); }
     </style>
 </head>
 <body>
@@ -203,7 +155,7 @@
             CONFIDENTIAL // INTERNAL USE ONLY
         </div>
         <h1>Engineering Documentation</h1>
-        <p>Enterprise-grade Serverless Infrastructure & Architectural Decision Records</p>
+        <p>Project Architecture & Technical Implementation Details</p>
     </header>
 
     <section class="module-section">
@@ -211,7 +163,11 @@
             <h2 class="module-title">MODULE 1: NET_PROBE</h2>
             <span class="badge bg-live">Production</span>
         </div>
-        <p style="color: var(--text-muted);">Distributed Network Diagnostic and Geo-Auditing Engine designed for real-time latency analysis.</p>
+        
+        <div class="concept-box">
+            <div class="concept-title">💡 Core Concept</div>
+            A tool to measure connection quality between a user's location and AWS Singapore Region. It helps identify if high latency is caused by the user's ISP routing or the AWS network itself.
+        </div>
 
         <div class="diagram-box">
             <img src="assets/Net_probe.png" alt="Net Probe Architecture Diagram" class="diagram-img">
@@ -220,20 +176,20 @@
 
         <div class="grid-2">
             <div>
-                <h3 class="section-title">Tech Stack Highlights</h3>
+                <h3 class="section-title">Tech Stack</h3>
                 <ul class="specs">
-                    <li><strong>Ingestion:</strong> AWS API Gateway (RESTful)</li>
-                    <li><strong>Compute:</strong> AWS Lambda (Python 3.x) - Non-blocking probes</li>
-                    <li><strong>Persistence:</strong> DynamoDB (On-demand + TTL enabled)</li>
-                    <li><strong>Security:</strong> IAM Roles with Least Privilege (PoLP)</li>
+                    <li><strong>Ingestion:</strong> AWS API Gateway</li>
+                    <li><strong>Compute:</strong> AWS Lambda (Python)</li>
+                    <li><strong>Database:</strong> DynamoDB (Logs storage)</li>
+                    <li><strong>Security:</strong> IAM Roles (Least Privilege)</li>
                 </ul>
             </div>
             <div>
-                <h3 class="section-title">Data Workflow</h3>
-                <div class="step"><strong>STEP 1</strong> Client sends ICMP/TCP request via API Gateway.</div>
-                <div class="step"><strong>STEP 2</strong> Lambda executes network probe across region boundary.</div>
-                <div class="step"><strong>STEP 3</strong> Results are structured & persisted to DynamoDB.</div>
-                <div class="step"><strong>STEP 4</strong> Response returned to client in < 200ms.</div>
+                <h3 class="section-title">How it works</h3>
+                <div class="step"><strong>STEP 1</strong> User sends a request from the browser.</div>
+                <div class="step"><strong>STEP 2</strong> Lambda triggers a network probe (Ping/TCP) to external targets.</div>
+                <div class="step"><strong>STEP 3</strong> Results (Latency/Location) are saved to DynamoDB.</div>
+                <div class="step"><strong>STEP 4</strong> Analysis is sent back to the user instantly.</div>
             </div>
         </div>
     </section>
@@ -243,7 +199,11 @@
             <h2 class="module-title">MODULE 2: FACE_BIOMETRIC</h2>
             <span class="badge bg-maintenance">Refactoring</span>
         </div>
-        <p style="color: var(--text-muted);">AI-Enhanced Verification System integrating Computer Vision & LLMs. (Currently optimizing concurrency).</p>
+        
+        <div class="concept-box">
+            <div class="concept-title">💡 Core Concept</div>
+            An experiment combining <strong>Face Matching (Rekognition)</strong> with <strong>AI Text Generation (Bedrock)</strong>. Instead of just saying "Match/No Match", the system uses AI to generate a readable report explaining the similarity confidence.
+        </div>
 
         <div class="diagram-box">
             <img src="assets/face_biometric.png" alt="Biometric Architecture Diagram" class="diagram-img">
@@ -252,18 +212,18 @@
 
         <div class="grid-2">
             <div>
-                <h3 class="section-title">Tech Stack Highlights</h3>
+                <h3 class="section-title">Tech Stack</h3>
                 <ul class="specs">
-                    <li><strong>Orchestration:</strong> AWS Lambda (Payload normalization)</li>
-                    <li><strong>Vision AI:</strong> Amazon Rekognition (Vector extraction)</li>
+                    <li><strong>Orchestration:</strong> AWS Lambda</li>
+                    <li><strong>Vision AI:</strong> Amazon Rekognition</li>
                     <li><strong>Gen AI:</strong> Amazon Bedrock (Claude 3 Haiku)</li>
                 </ul>
             </div>
             <div>
-                <h3 class="section-title">Intelligence Pipeline</h3>
-                <div class="step"><strong>STEP 1</strong> Base64 image payload hits API Gateway.</div>
-                <div class="step"><strong>STEP 2</strong> Lambda coordinates async calls to AI services.</div>
-                <div class="step"><strong>STEP 3</strong> Bedrock synthesizes security report.</div>
+                <h3 class="section-title">How it works</h3>
+                <div class="step"><strong>STEP 1</strong> Image is uploaded via API Gateway.</div>
+                <div class="step"><strong>STEP 2</strong> Lambda sends image to Rekognition for vector analysis.</div>
+                <div class="step"><strong>STEP 3</strong> Bedrock generates a summary report based on the data.</div>
             </div>
         </div>
     </section>
@@ -273,7 +233,13 @@
             <h2 class="module-title">MODULE 3: SOS_BEACON</h2>
             <span class="badge bg-live">Mission Critical</span>
         </div>
-        <p style="color: var(--text-muted);">Tactical Emergency Uplink bridging HTML5 Geolocation with Cloud Notification systems.</p>
+
+        <div class="concept-box">
+            <div class="concept-title">💡 Core Concept</div>
+            A personal emergency alert system. When triggered, it captures precise GPS coordinates and sends them to a pre-configured list of family members/admins.
+            <br><br>
+            <em>Note:</em> I use a <strong>verified list of recipients</strong> (via AWS SNS Sandbox) to ensure 100% delivery reliability and prevent messages from being flagged as spam by email providers.
+        </div>
 
         <div class="diagram-box">
             <img src="assets/sos.png" alt="SOS Architecture Diagram" class="diagram-img">
@@ -282,28 +248,28 @@
 
         <div class="grid-2">
             <div>
-                <h3 class="section-title">Tech Stack Highlights</h3>
+                <h3 class="section-title">Tech Stack</h3>
                 <ul class="specs">
-                    <li><strong>Telemetry:</strong> HTML5 Geolocation API (Client-side)</li>
-                    <li><strong>Broadcast:</strong> Amazon SNS (Fan-out pattern)</li>
-                    <li><strong>Logic:</strong> Lambda (Google Maps deep-linking generation)</li>
+                    <li><strong>Telemetry:</strong> HTML5 Geolocation API</li>
+                    <li><strong>Broadcast:</strong> Amazon SNS (Fan-out)</li>
+                    <li><strong>Logic:</strong> Lambda (Deep-linking generation)</li>
                 </ul>
             </div>
             <div>
-                <h3 class="section-title">Emergency Flow</h3>
-                <div class="step"><strong>STEP 1</strong> Browser captures High-Precision GPS Coords.</div>
-                <div class="step"><strong>STEP 2</strong> API Gateway ingests distress signal via Webhook.</div>
-                <div class="step"><strong>STEP 3</strong> SNS blasts SMS/Email to Admins instantly.</div>
+                <h3 class="section-title">How it works</h3>
+                <div class="step"><strong>STEP 1</strong> Browser captures GPS Coordinates.</div>
+                <div class="step"><strong>STEP 2</strong> Signal is sent securely to AWS.</div>
+                <div class="step"><strong>STEP 3</strong> SNS broadcasts SMS/Email to the verified list instantly.</div>
             </div>
         </div>
     </section>
 
     <div class="security-note">
-        <h3 style="color: var(--accent-yellow); margin-top: 0;">SECURITY COMPLIANCE NOTICE</h3>
+        <h3 style="color: var(--accent-yellow); margin-top: 0;">SECURITY NOTE</h3>
         <p style="margin-bottom: 0;">
-            To strictly adhere to <strong>AWS Security Best Practices</strong> regarding credential management and infrastructure protection, the source code repository is currently <strong>PRIVATE</strong>.
+            To follow <strong>AWS Security Best Practices</strong> (preventing credential leaks), the GitHub repository is currently set to <strong>PRIVATE</strong>.
             <br><br>
-            <em>I am available to provide a full code walkthrough and explain the <strong>Serverless Architecture & Implementation details</strong> during the technical interview.</em>
+            <em>I am happy to show the code and explain the implementation details in person during the interview.</em>
         </p>
     </div>
 
