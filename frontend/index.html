@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuấn Anh | Aspiring Cloud Architect Portfolio</title>
+    <meta name="description" content="Portfolio of Tuan Anh - Cloud Engineer specializing in AWS Serverless & DevOps security architectures.">
+    <title>Tuan Anh | Cloud Infrastructure Portfolio</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- GLOBAL STYLES --- */
+        /* * GLOBAL VARIABLES & RESET
+         * Using a dark, high-contrast theme suitable for Dev/Ops portfolios.
+         */
         :root {
-            --bg-dark: #0b1120;
-            --card-bg: #1e293b;
-            --border-color: #334155;
-            --accent-blue: #38bdf8;
-            --accent-yellow: #fbbf24;
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
+            --bg-dark: #0b1120;       /* Deep slate blue/black */
+            --card-bg: #1e293b;       /* Lighter slate for cards */
+            --border-color: #334155;  /* Subtle borders */
+            --accent-blue: #38bdf8;   /* Primary action color */
+            --accent-yellow: #fbbf24; /* Warning/Highlight color */
+            --text-main: #e2e8f0;     /* Primary text */
+            --text-muted: #94a3b8;    /* Secondary text */
+            --danger: #ef4444;        /* Error/Maintenance color */
+            --success: #10b981;       /* Success/Live color */
         }
 
         body { 
@@ -30,9 +37,13 @@
         }
 
         h1, h2, h3 { font-family: 'Inter', sans-serif; font-weight: 700; }
-        code, .btn-social, .badge, .tech-tag { font-family: 'Fira Code', monospace; }
+        
+        /* Apply Monospace font to technical elements */
+        code, .btn-social, .badge, .tech-tag, .security-notice { 
+            font-family: 'Fira Code', monospace; 
+        }
 
-        /* --- PROFILE CARD STYLES --- */
+        /* --- PROFILE CARD COMPONENT --- */
         .profile-card { 
             background: var(--card-bg); 
             width: 100%; 
@@ -46,14 +57,13 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
+        /* Left Column: Avatar & Contact */
         .profile-left { 
             flex: 0 0 300px; 
             text-align: center; 
             border-right: 1px solid var(--border-color); 
             padding-right: 40px; 
         }
-
-        .profile-right { flex: 1; display: flex; flex-direction: column; gap: 30px; }
 
         .profile-img { 
             width: 180px; 
@@ -64,24 +74,60 @@
             margin-bottom: 20px; 
         }
 
-        /* Social Buttons */
-        .social-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
+        /* Social/Contact Buttons */
+        .social-links { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+            margin-top: 25px; 
+        }
+        
         .btn-social { 
             text-decoration: none; 
             color: white; 
             padding: 10px; 
             border-radius: 8px; 
             font-weight: 600; 
-            font-size: 0.7rem; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-size: 0.75rem; 
+            transition: all 0.2s ease; 
             text-align: center;
             background: rgba(255,255,255,0.05);
             border: 1px solid var(--border-color);
         }
-        .btn-social:hover { background: var(--accent-blue); color: var(--bg-dark); transform: translateY(-3px); }
+        
+        .btn-social:hover { 
+            background: var(--accent-blue); 
+            color: var(--bg-dark); 
+            border-color: var(--accent-blue);
+        }
 
-        /* Certification Section */
-        .cert-section { border-top: 1px solid var(--border-color); padding-top: 25px; }
+        /* Security Disclaimer Style */
+        .security-notice {
+            margin-top: 20px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-align: left;
+            background: rgba(15, 23, 42, 0.5);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 2px solid var(--accent-yellow);
+            line-height: 1.4;
+        }
+
+        /* Right Column: Bio & Certs */
+        .profile-right { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 30px; 
+        }
+
+        /* Certification Badge Wrapper */
+        .cert-section { 
+            border-top: 1px solid var(--border-color); 
+            padding-top: 25px; 
+        }
+        
         .cert-badge-container { 
             display: flex; 
             gap: 20px; 
@@ -91,12 +137,17 @@
             padding: 20px; 
             border-radius: 12px; 
             border: 1px solid var(--border-color);
-            transition: all 0.3s;
+            transition: border-color 0.3s;
+            cursor: pointer;
         }
-        .cert-badge-container:hover { border-color: var(--accent-yellow); background: rgba(15, 23, 42, 0.8); }
+        
+        .cert-badge-container:hover { 
+            border-color: var(--accent-yellow); 
+        }
+        
         .cert-img { width: 80px; height: 80px; }
 
-        /* --- MODULE GRID STYLES --- */
+        /* --- PROJECTS GRID SYSTEM --- */
         .grid-container { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); 
@@ -110,7 +161,7 @@
             border: 1px solid var(--border-color); 
             border-radius: 16px; 
             padding: 30px; 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: transform 0.2s ease, box-shadow 0.2s ease; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
@@ -119,21 +170,21 @@
 
         .card-menu:hover { 
             border-color: var(--accent-blue); 
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 0 20px rgba(56, 189, 248, 0.1);
-            transform: translateY(-8px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transform: translateY(-4px);
         }
 
         .card-menu h3 { 
-            color: var(--accent-yellow); 
+            color: var(--text-main); 
             margin: 0 0 15px 0; 
             font-size: 1.1rem;
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            letter-spacing: 0.5px;
+            font-family: 'Fira Code', monospace;
         }
 
-        /* Buttons & Badges */
+        /* Action Buttons */
         .btn { 
             text-decoration: none; 
             background: #2563eb; 
@@ -141,32 +192,59 @@
             padding: 12px 24px; 
             border-radius: 8px; 
             font-weight: 700; 
-            font-size: 0.85rem;
+            font-size: 0.85rem; 
             text-align: center; 
-            transition: 0.3s;
+            transition: background 0.2s;
             margin-top: 20px;
+            font-family: 'Fira Code', monospace;
         }
-        .btn:hover { background: #3b82f6; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4); }
         
-        .card-menu.disabled { opacity: 0.6; filter: grayscale(0.5); }
-        .btn-disabled { background: #334155; cursor: not-allowed; pointer-events: none; opacity: 0.8; }
+        .btn:hover { background: #3b82f6; }
         
-        .tech-tag { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; margin: 4px 4px 4px 0; display: inline-block; }
+        /* State Modifiers */
+        .card-menu.disabled { opacity: 0.7; }
+        .btn-disabled { background: #334155; cursor: not-allowed; pointer-events: none; }
         
-        .badge { font-size: 0.65rem; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; font-weight: 700; }
-        .bg-live { background: #059669; color: white; }
-        .bg-soon { background: #ca8a04; color: white; }
-        .bg-maintenance { background: #ef4444; color: white; animation: pulse 2s infinite; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+        /* Tech Stack Tags */
+        .tech-tag { 
+            background: rgba(56, 189, 248, 0.1); 
+            color: var(--accent-blue); 
+            padding: 4px 10px; 
+            border-radius: 4px; 
+            font-size: 0.75rem; 
+            margin: 4px 4px 4px 0; 
+            display: inline-block; 
+        }
+        
+        /* Status Badges */
+        .badge { 
+            font-size: 0.65rem; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            text-transform: uppercase; 
+            font-weight: 700; 
+        }
+        
+        .bg-live { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .bg-maintenance { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
 
         /* Footer */
-        .footer { margin-top: 80px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; text-align: center; border-top: 1px solid var(--border-color); width: 100%; max-width: 400px; padding-top: 20px; }
+        .footer { 
+            margin-top: 80px; 
+            color: var(--text-muted); 
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem; 
+            text-align: center; 
+            border-top: 1px solid var(--border-color); 
+            width: 100%; 
+            max-width: 400px; 
+            padding-top: 20px; 
+        }
 
+        /* Mobile Responsiveness */
         @media (max-width: 900px) { 
             .profile-card { flex-direction: column; padding: 25px; gap: 30px; } 
             .profile-left { border-right: none; border-bottom: 1px solid var(--border-color); padding-right: 0; padding-bottom: 30px; flex: 0; } 
-            .social-links { grid-template-columns: 1fr 1fr 1fr 1fr; }
         }
     </style>
 </head>
@@ -174,23 +252,33 @@
 
     <div class="profile-card">
         <div class="profile-left">
-            <img src="profile.jpg" alt="Tuấn Anh" class="profile-img">
-            <h2 style="margin: 0; color: #fff;">Tuấn Anh</h2>
-            <div style="color: var(--accent-blue); font-size: 0.8rem; font-weight: 700; margin-top: 5px;">ASPIRING CLOUD ARCHITECT</div>
+            <img src="profile.jpg" alt="Tuan Anh" class="profile-img">
+            <h2 style="margin: 0; color: #fff;">Tuan Anh</h2>
+            <div style="color: var(--accent-blue); font-size: 0.85rem; font-weight: 600; margin-top: 8px; font-family: 'Fira Code', monospace;">
+                CLOUD_ARCHITECT // DEVOPS
+            </div>
             
             <div class="social-links">
-                <a href="https://github.com/nttuananh2004" target="_blank" class="btn-social">GITHUB</a>
+                <a href="https://github.com/nttuananh2004" target="_blank" class="btn-social">GITHUB_REPO</a>
                 <a href="https://www.linkedin.com/in/nguyen-tran-tuan-anh-534a5b1a5/" target="_blank" class="btn-social">LINKEDIN</a>
-                <a href="https://www.facebook.com/nttuananh2004/" target="_blank" class="btn-social">FB</a>
-                <a href="https://www.instagram.com/tuananh17th_nov/" target="_blank" class="btn-social">IG</a>
+            </div>
+
+            <div class="security-notice">
+                <strong>NOTE:</strong> Source code for enterprise projects is kept <strong>private</strong> to maintain security compliance. 
+                <br><br>
+                Repository access rights can be granted during technical interviews for code review.
             </div>
         </div>
         
         <div class="profile-right">
             <section>
-                <h3 style="color: var(--accent-yellow); margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Professional Profile</h3>
+                <h3 style="color: var(--accent-yellow); margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Professional Profile
+                </h3>
                 <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin: 0;">
-                    Passionate Cloud enthusiast building a strong foundation in <b>AWS Serverless Technologies</b>. I am a rapid learner dedicated to mastering cloud infrastructure through hands-on labs and real-world projects. Actively seeking opportunities to contribute and grow within a professional Cloud team.
+                    Passionate Cloud enthusiast building a strong foundation in <b>AWS Serverless Technologies</b>. 
+                    Focusing on secure, scalable infrastructure-as-code (IaC). 
+                    Actively seeking opportunities to contribute to high-velocity DevOps teams.
                 </p>
                 
                 <div style="margin-top: 25px; margin-bottom: 20px;">
@@ -198,20 +286,19 @@
                         display: inline-flex;
                         align-items: center;
                         gap: 10px;
-                        background: rgba(56, 189, 248, 0.1); 
+                        background: rgba(56, 189, 248, 0.05); 
                         border: 1px solid var(--accent-blue); 
                         color: var(--accent-blue); 
                         padding: 12px 24px; 
                         border-radius: 8px; 
                         text-decoration: none; 
-                        font-weight: 700; 
+                        font-weight: 600; 
                         font-size: 0.85rem; 
                         transition: all 0.3s ease;
-                        letter-spacing: 0.5px;
                         font-family: 'Fira Code', monospace;
                     " onmouseover="this.style.background='var(--accent-blue)'; this.style.color='var(--bg-dark)'" 
-                       onmouseout="this.style.background='rgba(56, 189, 248, 0.1)'; this.style.color='var(--accent-blue)'">
-                        [ VIEW SYSTEM ARCHITECTURE & DOCS ]
+                       onmouseout="this.style.background='rgba(56, 189, 248, 0.05)'; this.style.color='var(--accent-blue)'">
+                        [ VIEW SYSTEM ARCHITECTURE ]
                     </a>
                 </div>
 
@@ -223,21 +310,21 @@
                     <span class="tech-tag">Route53</span>
                     <span class="tech-tag">Terraform</span>
                     <span class="tech-tag">Python</span>
-                    <span class="tech-tag">Bedrock (AI)</span>
-                    <span class="tech-tag">Rekognition</span>
                     <span class="tech-tag">Git/CI/CD</span>
                 </div>
             </section>
 
             <section class="cert-section">
-                <h3 style="color: var(--accent-yellow); margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px;">Certifications</h3>
+                <h3 style="color: var(--accent-yellow); margin-bottom: 15px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Certifications
+                </h3>
                 <a href="https://www.credly.com/badges/f3d0934e-0c55-49df-b94f-dc475f0f0ac4/linked_in_profile" target="_blank" style="text-decoration: none;">
                     <div class="cert-badge-container">
                         <img src="https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png" alt="AWS SAA Badge" class="cert-img">
                         <div>
                             <div style="color: #fff; font-weight: 700; font-size: 1rem;">AWS Solutions Architect Associate</div>
-                            <div style="color: var(--text-muted); font-size: 0.8rem; margin: 4px 0;">Dec 2025 - Dec 2028</div>
-                            <div style="color: var(--accent-blue); font-size: 0.75rem; font-weight: 600;">Verify Badge ↗</div>
+                            <div style="color: var(--text-muted); font-size: 0.8rem; margin: 4px 0;">Issued Dec 2025</div>
+                            <div style="color: var(--accent-blue); font-size: 0.75rem; font-weight: 600; font-family: 'Fira Code', monospace;">[ VERIFY CREDLY BADGE ]</div>
                         </div>
                     </div>
                 </a>
@@ -248,7 +335,7 @@
     <div class="grid-container">
         <div class="card-menu">
             <div>
-                <h3>📡 NET_PROBE <span class="badge bg-live">Live</span></h3>
+                <h3>NET_PROBE <span class="badge bg-live">ONLINE</span></h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Real-time network diagnostics and global geo-tracking infrastructure.</p>
                 <div style="margin-top:10px">
                     <span class="tech-tag">Lambda</span>
@@ -261,30 +348,27 @@
 
         <div class="card-menu disabled">
             <div>
-                <h3>👤 BIOMETRIC <span class="badge bg-maintenance">Refactoring</span></h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">AI-driven facial similarity analysis PoC using Rekognition and Bedrock.</p>
+                <h3>BIOMETRIC_AUTH <span class="badge bg-maintenance">REFACTORING</span></h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">AI-driven facial similarity analysis using Rekognition and Bedrock.</p>
                 <div style="margin-top:10px">
                     <span class="tech-tag">Lambda</span>
-                    <span class="tech-tag">API Gateway</span>
                     <span class="tech-tag">Rekognition</span>
                     <span class="tech-tag">Bedrock</span>
                 </div>
             </div>
-            <a href="#" class="btn btn-disabled">UNDER MAINTENANCE</a>
+            <a href="#" class="btn btn-disabled">MAINTENANCE_MODE</a>
         </div>
 
         <div class="card-menu">
             <div>
-                <h3>🚨 SOS_BEACON <span class="badge bg-live">Live</span></h3>
+                <h3>SOS_UPLINK <span class="badge bg-live">ONLINE</span></h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
-                    Tactical emergency uplink integrating <strong>HTML5 Geolocation API</strong> with <strong>AWS SNS</strong>. 
-                    Broadcasts real-time GPS coordinates to administrators for immediate extraction protocol.
+                    Tactical emergency alert system integrating <strong>HTML5 Geo</strong> with <strong>AWS SNS</strong>.
                 </p>
                 <div style="margin-top:10px">
                     <span class="tech-tag">Lambda</span>
-                    <span class="tech-tag">API Gateway</span>
                     <span class="tech-tag">SNS</span>
-                    <span class="tech-tag">HTML5 Geo</span>
+                    <span class="tech-tag">GeoAPI</span>
                 </div>
             </div>
             <a href="sos.html" class="btn">LAUNCH MODULE</a>
@@ -292,7 +376,7 @@
     </div>
     
     <div class="footer">
-        STATUS: SYSTEM_READY // REGION: AP-SOUTHEAST-1 // © 2026
+        SYSTEM_STATUS: READY // REGION: AP-SOUTHEAST-1 // © 2026
     </div>
 
 </body>
