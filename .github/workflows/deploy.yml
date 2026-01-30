@@ -1,0 +1,53 @@
+name: Deploy Lambda
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        
+    - name: Install AWS CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y awscli
+
+    # --- Deploy SOS ---
+    - name: Deploy SOS
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-1
+      run: |
+        cd backend
+        zip -r sos.zip sos.py
+        aws lambda update-function-code --function-name PORTFOLIO_SOS_Broadcast --zip-file fileb://sos.zip
+
+    # --- Deploy NetProbe ---
+    - name: Deploy NetProbe
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-1
+      run: |
+        cd backend
+        zip -r net_probe.zip net_probe.py
+        aws lambda update-function-code --function-name PORTFOLIO_NetProbe --zip-file fileb://net_probe.zip
+
+    # --- Deploy Face Compare ---
+    - name: Deploy Face Compare
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: ap-southeast-1
+      run: |
+        cd backend
+        zip -r face_compare.zip face_compare.py
+        aws lambda update-function-code --function-name PORTFOLIO_FaceComparison --zip-file fileb://face_compare.zip
