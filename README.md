@@ -19,7 +19,7 @@
 A serverless utility designed for **real-time network latency analysis** and geographic auditing of target endpoints.
 
 ### Architecture Diagram
-![NET_PROBE Architecture](assets/Net_probe.png)
+![NET_PROBE Architecture](frontend/assets/Net_probe.png)
 
 ### Architecture Highlights
 * **Ingestion Layer:** RESTful interface managed by **AWS API Gateway** to receive diagnostic metadata.
@@ -34,7 +34,7 @@ A serverless utility designed for **real-time network latency analysis** and geo
 An experimental biometric verification system integrating **Computer Vision** and **Large Language Models (LLMs)** for automated identity risk assessment.
 
 ### Architecture Diagram
-![FACE_BIOMETRIC Architecture](assets/face_biometric.png)
+![FACE_BIOMETRIC Architecture](frontend/assets/face_biometric.png)
 
 ### Architecture Highlights
 * **Entry Point:** **AWS API Gateway** ingests base64-encoded image payloads directly to the processing layer.
@@ -50,7 +50,7 @@ An experimental biometric verification system integrating **Computer Vision** an
 A critical response mechanism designed to leverage client-side telemetry for immediate extraction protocols. It bridges the gap between physical location data and cloud-native notification pipelines.
 
 ### Architecture Diagram
-![SOS_BEACON Architecture](assets/sos.png)
+![SOS_BEACON Architecture](frontend/assets/sos.png)
 
 ### Architecture Highlights
 * **Telemetry Acquisition:** Leverages **HTML5 Geolocation API** for high-precision coordinate capture (Latitude/Longitude) directly from the client browser.
