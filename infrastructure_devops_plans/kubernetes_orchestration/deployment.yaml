@@ -1,0 +1,60 @@
+# ==============================================================================
+# INFRASTRUCTURE AS CODE: Kubernetes (K8s) Manifest
+# ------------------------------------------------------------------------------
+# Resource Type: Deployment
+# Strategy: Rolling Update (Zero-Downtime Deployment)
+# Objective: Prepare for high-traffic scaling on Amazon EKS.
+# ==============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: netprobe-production
+  namespace: vgu-cloud-lab
+  labels:
+    app: netprobe
+    tier: backend
+    layer: microservices
+spec:
+  # High Availability Configuration: Run 3 replicas to ensure fault tolerance
+  replicas: 3
+  
+  # Selector to identify which Pods belong to this Deployment
+  selector:
+    matchLabels:
+      app: netprobe
+
+  template:
+    metadata:
+      labels:
+        app: netprobe
+    spec:
+      containers:
+      - name: netprobe
+        # In a real pipeline, the image tag would be dynamic (e.g., git commit hash)
+        image: <AWS_ACCOUNT_ID>.dkr.ecr.ap-southeast-1.amazonaws.com/netprobe:latest
+        
+        # Container Port for internal cluster communication
+        ports:
+        - containerPort: 8080
+        
+        # ----------------------------------------------------------------------
+        # RESOURCE QUOTAS (FinOps & Stability)
+        # ----------------------------------------------------------------------
+        # Limits ensure a single pod cannot consume all node resources (OOM Protection)
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+        # ----------------------------------------------------------------------
+        # ENVIRONMENT CONFIGURATION
+        # ----------------------------------------------------------------------
+        env:
+        - name: DEVOPS_MODE
+          value: "enabled"
+        - name: ENVIRONMENT
+          value: "production"

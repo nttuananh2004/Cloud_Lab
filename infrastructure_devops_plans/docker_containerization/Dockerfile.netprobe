@@ -1,0 +1,34 @@
+# ==============================================================================
+# DEVOPS ARTIFACT: Docker Containerization Strategy
+# ------------------------------------------------------------------------------
+# Module: NetProbe (Network Telemetry)
+# Target: AWS Lambda (Container Image Support)
+# Objective: Standardize runtime environment between Development and Production.
+# ==============================================================================
+
+# Use the official AWS Lambda base image for Python 3.12 (Amazon Linux 2023)
+# This ensures security patches and compatibility with AWS infrastructure.
+FROM public.ecr.aws/lambda/python:3.12
+
+# ------------------------------------------------------------------------------
+# DEPENDENCY MANAGEMENT
+# ------------------------------------------------------------------------------
+# Copy the requirements file from the backend directory relative to build context
+COPY ../../backend/requirements.txt ${LAMBDA_TASK_ROOT}
+
+# Install Python dependencies into the Lambda task root
+# --no-cache-dir is used to minimize the final image size
+RUN pip install -r requirements.txt --target "${LAMBDA_TASK_ROOT}" --no-cache-dir
+
+# ------------------------------------------------------------------------------
+# SOURCE CODE INJECTION
+# ------------------------------------------------------------------------------
+# Copy the application source code into the container
+COPY ../../backend/net_probe.py ${LAMBDA_TASK_ROOT}
+
+# ------------------------------------------------------------------------------
+# EXECUTION ENTRY POINT
+# ------------------------------------------------------------------------------
+# Define the handler function to be invoked by the Lambda Runtime Interface Client
+# Format: <filename>.<function_name>
+CMD [ "net_probe.lambda_handler" ]
