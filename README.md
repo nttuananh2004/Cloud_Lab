@@ -1,5 +1,7 @@
 # CLOUD LAB: ENTERPRISE-GRADE AWS INFRASTRUCTURE POC
 
+**Live Demonstration:** [https://net-probe.vercel.app/](https://net-probe.vercel.app/)
+
 > This repository serves as a centralized showcase for cloud-native solutions, focusing on **Serverless Orchestration**, **Automated Biometric Analysis**, and **Distributed Network Diagnostics**. All infrastructures follow the **AWS Well-Architected Framework** with a strict focus on Security (PoLP) and Cost-Optimization (FinOps).
 
 ---
@@ -8,8 +10,8 @@
 
 * **Primary Region:** `ap-southeast-1` (Singapore)
 * **Architecture Pattern:** Pure Serverless (Zero-idle cost) & Event-Driven
-* **Compliance:** Regional Data Residency & Principle of Least Privilege
-* **CI/CD:** GitHub Actions (Automated Pipeline)
+* **Compliance:** Regional Data Residency & Principle of Least Privilege (PoLP)
+* **CI/CD:** GitHub Actions (Automated Deployment Pipeline)
 
 ---
 
@@ -22,8 +24,8 @@ A serverless utility designed for **real-time network latency analysis** and geo
 ![NET_PROBE Architecture](frontend/assets/Net_probe.png)
 
 ### Architecture Highlights
-* **Ingestion Layer:** RESTful interface managed by **AWS API Gateway** to receive diagnostic metadata.
-* **Compute & Egress:** **AWS Lambda** executes non-blocking ICMP/TCP probes, traversing the regional network boundary to reach external global targets.
+* **Ingestion Layer:** RESTful interface managed by **AWS API Gateway**.
+* **Compute & Egress:** **AWS Lambda** executes non-blocking ICMP/TCP probes, traversing the regional network boundary.
 * **Persistence:** **Amazon DynamoDB** stores historical logs with an active **TTL (Time To Live)** policy for automated data lifecycle management.
 
 ---
@@ -37,8 +39,8 @@ An experimental biometric verification system integrating **Computer Vision** an
 ![FACE_BIOMETRIC Architecture](frontend/assets/face_biometric.png)
 
 ### Architecture Highlights
-* **Entry Point:** **AWS API Gateway** ingests base64-encoded image payloads directly to the processing layer.
-* **Orchestration:** **AWS Lambda** performs runtime format normalization and coordinates concurrent calls to downstream AI services.
+* **Entry Point:** **AWS API Gateway** ingests base64-encoded image payloads.
+* **Orchestration:** **AWS Lambda** coordinates concurrent calls to downstream AI services.
 * **Computer Vision:** **Amazon Rekognition** executes facial vector extraction and similarity matching.
 * **Intelligence Layer:** **Amazon Bedrock (Claude 3 Haiku)** synthesizes raw biometric metadata into human-readable security reports.
 
@@ -47,16 +49,16 @@ An experimental biometric verification system integrating **Computer Vision** an
 ## MODULE 3: SOS_BEACON
 ### Tactical Emergency Uplink & Geo-Spatial Messaging System
 
-A critical response mechanism designed to leverage client-side telemetry for immediate extraction protocols. It bridges the gap between physical location data and cloud-native notification pipelines.
+A critical response mechanism designed to bridge the gap between client-side telemetry and cloud-native notification pipelines.
 
 ### Architecture Diagram
 ![SOS_BEACON Architecture](frontend/assets/sos.png)
 
 ### Architecture Highlights
-* **Telemetry Acquisition:** Leverages **HTML5 Geolocation API** for high-precision coordinate capture (Latitude/Longitude) directly from the client browser.
-* **Event Ingestion:** **AWS API Gateway** provides a secure, low-latency webhook for distress signal transmission.
-* **Logic & Formatting:** **AWS Lambda** processes the payload, validates coordinates, and generates tactical map visualizations (Google Maps deep-linking).
-* **Broadcast Layer:** **Amazon SNS** executes a "Fan-out" pattern to instantly broadcast alerts to administrators via Email/SMS with near-zero latency.
+* **Telemetry Acquisition:** Leverages **HTML5 Geolocation API** for high-precision coordinate capture.
+* **Event Ingestion:** **AWS API Gateway** provides a secure, low-latency webhook.
+* **Logic & Formatting:** **AWS Lambda** processes the payload and generates tactical map visualizations (Google Maps deep-linking).
+* **Broadcast Layer:** **Amazon SNS** executes a "Fan-out" pattern to instantly broadcast alerts to administrators via Email/SMS.
 
 ---
 
