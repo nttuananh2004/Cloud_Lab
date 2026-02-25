@@ -1,4 +1,4 @@
-# Last commit by TuanAnh dep trai
+# Last commit by TuanAnh 
 import json
 import boto3
 import os
