@@ -1,5 +1,5 @@
 # Last commit by TuanAnh 
-
+# for shopback interview
 import json
 import boto3
 import os
