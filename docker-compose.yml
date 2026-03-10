@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  net-probe:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/Dockerfile
+    ports: ["8081:8081"]
+    environment:
+      - MODULE_NAME=net_probe
+      - PORT=8081
+      - DYNAMODB_TABLE=NetProbeLogs
+
+  face-auth:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/Dockerfile
+    ports: ["8082:8082"]
+    environment:
+      - MODULE_NAME=face_compare
+      - PORT=8082
+
+  sos-uplink:
+    build:
+      context: .
+      dockerfile: ./infrastructure/docker/Dockerfile
+    ports: ["8083:8083"]
+    environment:
+      - MODULE_NAME=sos
+      - PORT=8083
+      - SNS_TOPIC_ARN=arn:aws:sns:ap-southeast-1:123456789:Local_Topic

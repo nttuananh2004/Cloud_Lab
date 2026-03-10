@@ -203,7 +203,7 @@
         
         /* State Modifiers */
         .card-menu.disabled { opacity: 0.7; }
-        .btn-disabled { background: #334155; cursor: not-allowed; pointer-events: none; }
+        .btn-disabled { background: #334155 !important; cursor: not-allowed !important; pointer-events: none; color: #94a3b8 !important; }
         
         /* Tech Stack Tags */
         .tech-tag { 
@@ -344,9 +344,10 @@
     </div>
 
     <div class="grid-container">
+        
         <div class="card-menu">
             <div>
-                <h3>NET_PROBE <span class="badge bg-live">ONLINE</span></h3>
+                <h3>NET_PROBE <span id="netprobe-status" class="badge bg-live">ONLINE</span></h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Real-time network diagnostics and global geo-tracking infrastructure.</p>
                 <div style="margin-top:10px">
                     <span class="tech-tag">Lambda</span>
@@ -354,12 +355,12 @@
                     <span class="tech-tag">DynamoDB</span>
                 </div>
             </div>
-            <a href="netprobe.html" class="btn">LAUNCH CONSOLE</a>
+            <a href="netprobe.html" id="netprobe-btn" class="btn">LAUNCH CONSOLE</a>
         </div>
 
-        <div class="card-menu disabled">
+        <div class="card-menu" id="face-card">
             <div>
-                <h3>BIOMETRIC_AUTH <span class="badge bg-maintenance">REFACTORING</span></h3>
+                <h3>BIOMETRIC_AUTH <span id="face-status" class="badge bg-live">ONLINE</span></h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">AI-driven facial similarity analysis using Rekognition and Bedrock.</p>
                 <div style="margin-top:10px">
                     <span class="tech-tag">Lambda</span>
@@ -367,12 +368,12 @@
                     <span class="tech-tag">Bedrock</span>
                 </div>
             </div>
-            <a href="#" class="btn btn-disabled">MAINTENANCE_MODE</a>
+            <a href="face.html" id="face-btn" class="btn">LAUNCH MODULE</a>
         </div>
 
         <div class="card-menu">
             <div>
-                <h3>SOS_UPLINK <span class="badge bg-live">ONLINE</span></h3>
+                <h3>SOS_UPLINK <span id="sos-status" class="badge bg-live">ONLINE</span></h3>
                 <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">Tactical emergency alert system integrating HTML5 Geo with AWS SNS.</p>
                 <div style="margin-top:10px">
                     <span class="tech-tag">Lambda</span>
@@ -380,7 +381,7 @@
                     <span class="tech-tag">GeoAPI</span>
                 </div>
             </div>
-            <a href="sos.html" class="btn">LAUNCH MODULE</a>
+            <a href="sos.html" id="sos-btn" class="btn">LAUNCH MODULE</a>
         </div>
     </div>
     
@@ -388,5 +389,64 @@
         SYSTEM_STATUS: READY // REGION: AP-SOUTHEAST-1 // © 2026
     </div>
 
+    <script>
+        async function monitorServiceHealth() {
+            // Configuration registry matching Docker Compose ports
+            const services = [
+                { id: 'netprobe-status', btnId: 'netprobe-btn', port: 8081, label: 'LAUNCH CONSOLE' },
+                { id: 'face-status', btnId: 'face-btn', port: 8082, label: 'LAUNCH MODULE' },
+                { id: 'sos-status', btnId: 'sos-btn', port: 8083, label: 'LAUNCH MODULE' }
+            ];
+
+            for (const s of services) {
+                const statusEl = document.getElementById(s.id);
+                const btnEl = document.getElementById(s.btnId);
+                const cardEl = btnEl ? btnEl.closest('.card-menu') : null;
+                
+                if (!statusEl || !btnEl) continue;
+
+                try {
+                    // AbortController prevents fetch from hanging if Docker is completely unresponsive
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 1500);
+
+                    // Health check ping to local Docker adapter
+                    const response = await fetch(`http://localhost:${s.port}/health`, { 
+                        mode: 'cors',
+                        signal: controller.signal
+                    });
+                    
+                    clearTimeout(timeoutId);
+
+                    if (response.ok) {
+                        // HEALTHY STATE: Container is up and responding
+                        statusEl.innerText = "ONLINE";
+                        statusEl.className = "badge bg-live";
+                        btnEl.innerText = s.label;
+                        btnEl.classList.remove("btn-disabled");
+                        if(cardEl) cardEl.classList.remove("disabled");
+                    } else {
+                        throw new Error("Service returned non-200 status");
+                    }
+                } catch (error) {
+                    // MAINTENANCE STATE: Container is down, timeout, or network error
+                    statusEl.innerText = "MAINTENANCE";
+                    statusEl.className = "badge bg-maintenance";
+                    btnEl.innerText = "MAINTENANCE_MODE";
+                    btnEl.classList.add("btn-disabled");
+                    if(cardEl) cardEl.classList.add("disabled");
+                    
+                    // Silent logging for debugging without alerting the end user
+                    console.debug(`[SRE_MONITOR] Service on port ${s.port} is unreachable. Applied graceful degradation.`);
+                }
+            }
+        }
+
+        // Initialize monitoring and set polling interval (3000ms = 3 seconds)
+        document.addEventListener('DOMContentLoaded', () => {
+            monitorServiceHealth(); // Initial immediate check
+            setInterval(monitorServiceHealth, 3000); // Recurring check
+        });
+    </script>
 </body>
 </html>
