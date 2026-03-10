@@ -6,44 +6,38 @@
 
 1.  **Production Environment (Current):**
     * **Architecture:** Serverless (AWS Lambda).
-    * **Deployment Method:** Zip-based deployment via GitHub Actions.
-    * **Justification:** This adheres to the **Cost Optimization** pillar of the AWS Well-Architected Framework. For current workloads, a serverless approach ensures $0 operational cost (Free Tier) and lowest possible latency (no container cold starts).
+    * **Justification:** Adheres to the **Cost Optimization** pillar of the AWS Well-Architected Framework ($0 operational cost, Zero-idle compute).
 
-2.  **Enterprise Readiness (Planned):**
+2.  **Hybrid Lab / Staging (Current Testing):**
+    * **Architecture:** Containerized Microservices hosted on AWS EC2.
+    * **Deployment:** Provisioned via **Terraform (IaC)** and orchestrated by **Docker-Compose**.
+    * **Justification:** Allows for rigorous integration testing of containerized logic without the overhead of a full Kubernetes cluster.
+
+3.  **Enterprise Readiness (Planned Target):**
     * **Architecture:** Microservices on Kubernetes (Amazon EKS).
-    * **Deployment Method:** Containerized (Docker) orchestrated by Helm.
-    * **Justification:** This directory contains the Infrastructure-as-Code (IaC) artifacts required to migrate the system when traffic demands horizontal scaling and high availability.
+    * **Justification:** Blueprint artifacts ready for seamless migration when traffic demands horizontal scaling (HPA) and Self-healing.
 
-## Technical Comparison
+---
 
-| Feature | Current Implementation (Portfolio Mode) | Enterprise Target (Migration Plan) |
-| :--- | :--- | :--- |
-| **Compute Engine** | AWS Lambda (Python Runtime) | Amazon EKS (Kubernetes) |
-| **Artifact Type** | Raw Source Code (.zip) | Docker Container Images |
-| **Orchestration** | None (Event-driven) | K8s Deployment & Service |
-| **Cost Model** | Pay-per-request (FinOps Optimized) | Provisioned Capacity (Performance Optimized) |
+## 🛠 SRE Runbook: Infrastructure Cheat Sheet
+*A quick reference guide for deploying the Hybrid Lab topology.*
+
+### 1. Terraform (Infrastructure Provisioning)
+Navigate to the `/infrastructure` directory to provision the AWS EC2 instance:
+* `terraform init` - Initializes the backend and downloads the AWS provider.
+* `terraform plan` - Previews the infrastructure changes (Security Groups, EC2).
+* `terraform apply -auto-approve` - Executes the build plan.
+* `terraform destroy` - **[FINOPS]** Tears down the infrastructure to prevent billing.
+
+### 2. Docker Compose (Microservices Orchestration)
+Once SSH'd into the EC2 instance (or running locally), manage the application stack:
+* `docker-compose up -d --build` - Builds the images and starts containers in detached mode.
+* `docker-compose logs -f` - Tails the consolidated logs for all 3 microservices (NetProbe, FaceAuth, SOS).
+* `docker-compose down` - Stops and removes containers, networks, and volumes.
+
+---
 
 ## Repository Artifacts
-
-This directory hosts the blueprints for the Enterprise Target architecture.
-
-### 1. Containerization Strategy (/docker_containerization)
-* **Base Image:** `public.ecr.aws/lambda/python:3.12`
-* **Goal:** Standardize the execution environment to eliminate "works on my machine" discrepancies between development and production.
-
-### 2. Orchestration Manifests (/kubernetes_orchestration)
-* **Resource:** `Deployment`
-* **Configuration:**
-    * **Replicas:** 3 (High Availability).
-    * **Resource Quotas:** Defined CPU/Memory limits to prevent noisy neighbor issues.
-    * **Health Checks:** Liveness and Readiness probes configured.
-
-### 3. Package Management (/helm_charts)
-* **Tool:** Helm v3
-* **Goal:** abstracting complexity and enabling version-controlled infrastructure deployments.
-
-## Pilot Migration Strategy
-The **NetProbe** module has been selected as the **Pilot Service** (Proof of Concept) for this migration initiative. 
-
-* **Rationale:** NetProbe represents a stateless workload suitable for containerization.
-* **Execution:** Upon successful validation of these artifacts on a staging cluster, this pattern will be replicated for `SOS_Broadcast` and `Face_Comparison` modules.
+* `/infrastructure/main.tf`: The declarative AWS environment blueprint.
+* `/infrastructure/docker/`: Standardized Python 3.9-slim execution environments.
+* `/infrastructure/kubernetes_orchestration/`: EKS-ready `Deployment.yaml` featuring 3 Replicas and strict `128Mi/250m` Resource Quotas to prevent OOM errors.
