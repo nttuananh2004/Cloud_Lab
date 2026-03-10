@@ -3,280 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 2: Face Compare</title>
+    <meta name="description" content="Portfolio of Tuan Anh - Cloud Engineer specializing in AWS Serverless & DevOps security architectures.">
+    <title>Tuan Anh | Cloud Infrastructure Portfolio</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            background: #0f172a;
-            color: #e2e8f0;
-            font-family: 'Courier New', monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            position: relative;
+        :root {
+            --bg-dark: #0b1120;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --accent-blue: #38bdf8;
+            --accent-yellow: #fbbf24;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --success: #10b981;
         }
 
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            text-decoration: none;
-            background: #334155;
-            color: white;
-            padding: 8px 15px;
-            font-size: 0.9rem;
-            border-radius: 4px;
-            font-weight: bold;
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            margin: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 60px 20px;
         }
 
-        .back-btn:hover {
-            background: #475569;
+        code, .btn-social, .badge, .tech-tag, .security-notice { font-family: 'Fira Code', monospace; }
+
+        .profile-card { 
+            background: var(--card-bg); 
+            width: 100%; 
+            max-width: 1100px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 40px; 
+            margin-bottom: 50px; 
+            display: flex; 
+            gap: 50px; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .card {
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            width: 450px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-        }
+        .profile-left { flex: 0 0 300px; text-align: center; border-right: 1px solid var(--border-color); padding-right: 40px; }
+        .profile-img { width: 180px; height: 180px; border-radius: 24px; object-fit: cover; border: 2px solid var(--accent-blue); margin-bottom: 20px; }
+        .social-links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
+        .btn-social { text-decoration: none; color: white; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 0.75rem; transition: 0.2s; text-align: center; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); }
+        .btn-social:hover { background: var(--accent-blue); color: var(--bg-dark); border-color: var(--accent-blue); }
 
-        h2 {
-            color: #fbbf24;
-            margin-top: 0;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 15px;
-            letter-spacing: 1px;
-        }
+        .security-notice { margin-top: 20px; font-size: 0.7rem; color: var(--text-muted); text-align: left; background: rgba(15, 23, 42, 0.5); padding: 10px; border-radius: 6px; border-left: 2px solid var(--accent-yellow); line-height: 1.4; }
 
-        .stat {
-            display: flex;
-            justify-content: space-between;
-            margin: 12px 0;
-            border-bottom: 1px dashed #334155;
-            padding-bottom: 5px;
-        }
+        .profile-right { flex: 1; display: flex; flex-direction: column; gap: 30px; }
+        .cert-section { border-top: 1px solid var(--border-color); padding-top: 25px; }
+        .cert-badge-container { display: flex; gap: 20px; align-items: center; margin-top: 15px; background: rgba(15, 23, 42, 0.6); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); transition: 0.3s; cursor: pointer; }
+        .cert-badge-container:hover { border-color: var(--accent-yellow); }
+        .cert-img { width: 80px; height: 80px; }
 
-        .val {
-            font-weight: bold;
-            color: #38bdf8;
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; width: 100%; max-width: 1100px; }
+        .card-menu { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; transition: transform 0.2s ease, box-shadow 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 220px; }
+        .card-menu:hover { border-color: var(--accent-blue); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); transform: translateY(-4px); }
+        .card-menu h3 { color: var(--text-main); margin: 0 0 15px 0; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; font-family: 'Fira Code', monospace; }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 20px;
-            font-family: monospace;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: all 0.2s;
-        }
+        .btn { text-decoration: none; background: #2563eb; color: white; padding: 12px 24px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; text-align: center; transition: 0.2s; margin-top: 20px; font-family: 'Fira Code', monospace; }
+        .btn:hover { background: #3b82f6; }
+        
+        .card-menu.disabled { opacity: 0.7; }
+        .btn-disabled { background: #334155; cursor: not-allowed; pointer-events: none; }
+        
+        .tech-tag { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; margin: 4px 4px 4px 0; display: inline-block; }
+        .badge { font-size: 0.65rem; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; font-weight: 700; }
+        .bg-live { background: rgba(16, 185, 129, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .bg-maintenance { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
 
-        button:hover {
-            background: #1d4ed8;
-            transform: translateY(-1px);
-        }
+        .footer { margin-top: 80px; color: var(--text-muted); font-family: 'Fira Code', monospace; font-size: 0.75rem; text-align: center; border-top: 1px solid var(--border-color); width: 100%; max-width: 400px; padding-top: 20px; }
 
-        button:disabled {
-            background: #475569;
-            cursor: not-allowed;
-        }
-
-        /* --- STYLE UPLOAD --- */
-        .upload-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .upload-box {
-            flex: 1;
-            border: 1px dashed #475569;
-            padding: 10px;
-            border-radius: 6px;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
-            height: 120px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background: #0f172a;
-        }
-
-        .upload-box:hover {
-            border-color: #38bdf8;
-            background: #1e293b;
-        }
-
-        .upload-box img {
-            max-width: 100%;
-            max-height: 100%;
-            display: none;
-            object-fit: contain;
-        }
-
-        .upload-box span {
-            font-size: 0.8rem;
-            color: #94a3b8;
-            font-weight: bold;
-        }
-
-        input[type="file"] {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .ai-analysis {
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            color: #cbd5e1;
-            margin-top: 10px;
-            border: 1px solid #334155;
-            display: none;
-        }
-
-        .ai-title {
-            color: #fbbf24;
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 3px;
+        @media (max-width: 900px) {
+            .profile-card { flex-direction: column; padding: 25px; gap: 30px; }
+            .profile-left { border-right: none; border-bottom: 1px solid var(--border-color); padding-right: 0; padding-bottom: 30px; flex: 0; }
         }
     </style>
 </head>
 <body>
 
-    <a href="index.html" class="back-btn">⬅ DASHBOARD</a>
-
-    <div class="card">
-        <h2>👥 FACE COMPARISON</h2>
+    <div class="profile-card">
+        <div class="profile-left">
+            <img src="profile.jpg" alt="Tuan Anh" class="profile-img">
+            <h2 style="margin: 0; color: #fff;">Tuan Anh</h2>
+            <div style="color: var(--accent-blue); font-size: 0.85rem; font-weight: 600; margin-top: 8px; font-family: 'Fira Code', monospace;">CLOUD_ARCHITECT // DEVOPS</div>
+            <div class="social-links">
+                <a href="https://github.com/nttuananh2004" target="_blank" class="btn-social">GITHUB_REPO</a>
+                <a href="https://www.linkedin.com/in/nguyen-tran-tuan-anh-534a5b1a5/" target="_blank" class="btn-social">LINKEDIN</a>
+            </div>
+            <div class="security-notice">
+                <strong>NOTE:</strong> Source code is private for security. Repository access can be granted during technical interviews.
+            </div>
+        </div>
         
-        <div class="upload-area">
-            <div class="upload-box" id="box1">
-                <span id="lbl1">Click to Upload<br>FACE 1</span>
-                <img id="preview1" alt="Preview 1">
-                <input type="file" id="file1" accept="image/*" onchange="previewImage(this, 'preview1', 'lbl1')">
-            </div>
-            <div class="upload-box" id="box2">
-                <span id="lbl2">Click to Upload<br>FACE 2</span>
-                <img id="preview2" alt="Preview 2">
-                <input type="file" id="file2" accept="image/*" onchange="previewImage(this, 'preview2', 'lbl2')">
-            </div>
-        </div>
+        <div class="profile-right">
+            <section>
+                <h3 style="color: var(--accent-yellow); font-size: 0.9rem; text-transform: uppercase;">Professional Profile</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7;">
+                    Cloud enthusiast building on <b>AWS Serverless</b>. Focused on secure, scalable IaC using Terraform.
+                </p>
+                <div style="margin-top: 15px;">
+                    <span class="tech-tag">AWS Lambda</span> <span class="tech-tag">Terraform</span> <span class="tech-tag">Python</span>
+                </div>
+            </section>
 
-        <div class="stat">
-            <span>MATCH STATUS:</span>
-            <span id="status" class="val">---</span>
+            <section class="cert-section">
+                <h3 style="color: var(--accent-yellow); font-size: 0.9rem; text-transform: uppercase;">Certifications</h3>
+                <div class="cert-badge-container">
+                    <img src="https://images.credly.com/size/340x340/images/0e284c3f-5164-4b21-8660-0d84737941bc/image.png" class="cert-img">
+                    <div>
+                        <div style="color: #fff; font-weight: 700;">AWS Solutions Architect Associate</div>
+                        <div style="color: var(--accent-blue); font-size: 0.75rem;">[ VERIFY_SAA ]</div>
+                    </div>
+                </div>
+            </section>
         </div>
-        <div class="stat" style="border:none">
-            <span>SIMILARITY:</span>
-            <span id="score" class="val">---</span>
-        </div>
-
-        <div id="ai-result" class="ai-analysis">
-            <span class="ai-title">🤖 AI ANALYSIS:</span>
-            <p id="analysis-en" style="margin: 5px 0; font-style: italic;">Processing...</p>
-            <p id="analysis-vn" style="margin: 5px 0; color: #94a3b8;">...</p>
-        </div>
-
-        <button onclick="compareFaces()">COMPARE FACES</button>
     </div>
 
-    <script>
-        const API_URL = "https://mb05ts26n2.execute-api.ap-southeast-1.amazonaws.com/face-compare";
+    <div class="grid-container">
+        <div class="card-menu">
+            <div>
+                <h3>NET_PROBE <span class="badge bg-live">ONLINE</span></h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Network diagnostics and global geo-tracking infrastructure.</p>
+            </div>
+            <a href="netprobe.html" class="btn">LAUNCH CONSOLE</a>
+        </div>
 
-        function previewImage(input, imgId, lblId) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = document.getElementById(imgId);
-                    const lbl = document.getElementById(lblId);
-                    img.src = e.target.result;
-                    img.style.display = 'block';
-                    lbl.style.display = 'none';
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+        <div class="card-menu">
+            <div>
+                <h3>BIOMETRIC_AUTH <span class="badge bg-live">ONLINE</span></h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">AI-driven facial similarity analysis using Rekognition.</p>
+            </div>
+            <a href="face.html" class="btn">LAUNCH MODULE</a>
+        </div>
 
-        async function compareFaces() {
-            const f1 = document.getElementById('file1').files[0];
-            const f2 = document.getElementById('file2').files[0];
+        <div class="card-menu">
+            <div>
+                <h3>SOS_UPLINK <span class="badge bg-live">ONLINE</span></h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Tactical emergency alert system integrating Geo with AWS SNS.</p>
+            </div>
+            <a href="sos.html" class="btn">LAUNCH MODULE</a>
+        </div>
+    </div>
+    
+    <div class="footer">SYSTEM_STATUS: READY // REGION: AP-SOUTHEAST-1 // © 2026</div>
 
-            if (!f1 || !f2) {
-                alert("⚠ Please upload both faces!");
-                return;
-            }
-
-            const btn = document.querySelector('button');
-            const aiDiv = document.getElementById('ai-result');
-            
-            btn.innerText = "COMPARING...";
-            btn.disabled = true;
-            aiDiv.style.display = 'none';
-
-            // Convert ảnh sang Base64
-            const toBase64 = file => new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
-
-            try {
-                const img1 = await toBase64(f1);
-                const img2 = await toBase64(f2);
-
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ source: img1, target: img2 })
-                });
-
-                const data = await res.json();
-
-                if (data.error) throw new Error(data.error);
-                
-                // Hiển thị kết quả
-                const statusElem = document.getElementById('status');
-                statusElem.innerText = data.matched ? "MATCHED ✅" : "DIFFERENT ❌";
-                statusElem.style.color = data.matched ? "#4ade80" : "#f87171";
-                
-                document.getElementById('score').innerText = (data.similarity || 0) + "%";
-
-                // Hiển thị AI nhận xét
-                if (data.analysis_en) {
-                    aiDiv.style.display = 'block';
-                    document.getElementById('analysis-en').innerText = '"' + data.analysis_en + '"';
-                    document.getElementById('analysis-vn').innerText = data.analysis_vn || "";
-                }
-
-            } catch (e) {
-                console.error(e);
-                alert("API Error: " + e.message);
-            } finally {
-                btn.innerText = "COMPARE FACES";
-                btn.disabled = false;
-            }
-        }
-    </script>
 </body>
 </html>
